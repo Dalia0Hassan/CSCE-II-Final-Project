@@ -37,62 +37,50 @@ Player::Player() {
 }
 
 void Player::keyPressEvent(QKeyEvent *event) {
-    bool stateChanged = false;
+    // Avoid multiple key presses
+    if (keysPressed.contains(event->key()))
+        return;
 
-    // Add attack action
-    if (event->key() == Qt::Key_A) {
+    // Add the key to the pressed keys set
+    keysPressed.insert(event->key());
+
+    // Handle the key press
+    if (event->key() == Qt::Key_A)
         currentActions.insert(ATTACK_3);
-        stateChanged = true;
-    }
-    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-        if (!keysPressed.contains(event->key())) {
-            keysPressed.insert(event->key());
-            currentActions.insert(WALK);
-            stateChanged = true;
-        }
-    }
-    if (event->key() == Qt::Key_Shift && (keysPressed.contains(Qt::Key_Right) || keysPressed.contains(Qt::Key_Left))) {
-        if (!keysPressed.contains(event->key())) {
-            keysPressed.insert(event->key());
-            currentActions.insert(RUN);
-            stateChanged = true;
-        }
-    }
-    if (event->key() == Qt::Key_Space && !currentActions.contains(JUMP)) {
+    else if (event->key() == Qt::Key_Shift)
+        currentActions.insert(RUN);
+    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
+        currentActions.insert(WALK);
+    else if (event->key() == Qt::Key_Space) {
+        currentActions.insert(JUMP);
+        // Handle the jump
         handleJumping(currentActions.contains(WALK));
-        stateChanged = true;
-        // Add jump sound
-        jumpSound->stop();
-        jumpSound->play();
     }
 
-    if (stateChanged) {
-        setCurrentSprite();
-    }
+    // Update the sprite sheet
+    setCurrentSprite();
 }
 
 void Player::keyReleaseEvent(QKeyEvent *event) {
-    bool stateChanged = false;
 
-    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-        if (keysPressed.contains(event->key())) {
-            keysPressed.remove(event->key());
+    // Avoid multiple removes
+    if (!keysPressed.contains(event->key()))
+        return;
+
+    // Remove the key from the pressed keys set
+    keysPressed.remove(event->key());
+
+    // Handle the key release
+    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
             currentActions.remove(WALK);
-            stateChanged = true;
-
-        }
-    }
-    if (event->key() == Qt::Key_Shift) {
-        if (keysPressed.contains(event->key())) {
-            keysPressed.remove(event->key());
+    else if (event->key() == Qt::Key_Shift)
             currentActions.remove(RUN);
-            stateChanged = true;
-        }
+    else if (event->key() == Qt::Key_A) {
+        currentActions.remove(ATTACK_3);
     }
 
-    if (stateChanged) {
-        setCurrentSprite();
-    }
+    // Update the sprite sheet
+    setCurrentSprite();
 }
 void Player::setCurrentSprite() {
     PlayerActions newDominantAction;
