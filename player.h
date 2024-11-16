@@ -46,6 +46,7 @@ private:
     void handleAttack();
     void changeDirection(PlayerDirections);
     bool checkSceneBoundries(int = 0);
+    void stopWalking();
 
     Sound * jumpSound;
     Sound * walkSound;
@@ -53,7 +54,6 @@ private:
     void animateAction(PlayerActions, int = 0);
 signals:
     void playerPositionChanged();
-    void stopWalking();
 };
 
 #endif // PLAYER_H

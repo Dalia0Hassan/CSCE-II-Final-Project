@@ -81,9 +81,12 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
     keysPressed.remove(event->key());
 
     // Handle the key release
-    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
+    if (
+        (event->key() == Qt::Key_Left && !keysPressed.contains(Qt::Key_Right))
+        || (event->key() == Qt::Key_Right && !keysPressed.contains(Qt::Key_Left))
+        ) {
         currentActions.remove(WALK);
-        emit stopWalking();
+        stopWalking();
     }
     else if (event->key() == Qt::Key_Shift)
             currentActions.remove(RUN);
@@ -143,14 +146,13 @@ void Player::handleWalking() {
     walkSound->play();
     // Start timer to handle horizontal movement
     horizontalMovementTimer->start(16);
+}
 
-    // Detect when the player should stop walking
-    connect(this, &Player::stopWalking, this, [=](){
-        // Stop walking sound
-        walkSound->stop();
-        // Stop the horizontal movement timer
-        horizontalMovementTimer->stop();
-    });
+void Player::stopWalking() {
+    // Stop walking sound
+    walkSound->stop();
+    // Stop the horizontal movement timer
+    horizontalMovementTimer->stop();
 }
 
 void Player::handleHorizontalMovement() {
@@ -177,7 +179,7 @@ void Player::handleHorizontalMovement() {
         setPos(x() + shift, y());
         emit playerPositionChanged();
     } else
-        emit stopWalking();
+        stopWalking();
 }
 
 void Player::handleJumping(bool moveHorizontally) {
