@@ -37,6 +37,7 @@ public:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     void handleHorizontalMovement();
+    void focusOutEvent(QFocusEvent * event);
 
 private:
     void setCurrentSprite();

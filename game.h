@@ -24,7 +24,7 @@ public:
     float getGroundLevel() { return groundLevel; }
 public slots:
     void moveWithPlayer();
-    // void resizeEvent(QResizeEvent *event) override;
+    void KeyPressEvent(QKeyEvent *event);
 };
 
 #endif // GAME_H

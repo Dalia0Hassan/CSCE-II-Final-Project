@@ -179,6 +179,12 @@ void Player::handleHorizontalMovement() {
         stopWalking();
 }
 
+void Player::focusOutEvent(QFocusEvent *event) {
+    // Give the focus back to the player
+    Q_UNUSED(event);
+    setFocus();
+}
+
 void Player::handleJumping() {
     // Do not jump if the player is already jumping
     if (isJumping)

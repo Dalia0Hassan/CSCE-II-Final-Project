@@ -49,3 +49,10 @@ void Game::moveWithPlayer() {
 
     centerOn(x, y);
 }
+
+void Game::KeyPressEvent(QKeyEvent *event)
+{
+    // Prevent moving the view if it has focus
+    if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left)
+        return;
+}
