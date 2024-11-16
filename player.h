@@ -26,29 +26,35 @@ private:
     QVector<SpriteSheet> spriteSheets;
     int currentSpriteFrame;
     bool isJumping = false;
+    bool isAttacking = false;
 
     QTimer *spriteTimer;
     QTimer *jumpTimer;
-    QTimer * horizontalMovementTimer;
+    QTimer *walkTimer;
+    QTimer *attackTimer;
 public:
     Player();
+    ~Player();
 
     public slots:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
-    void handleHorizontalMovement();
     void focusOutEvent(QFocusEvent * event);
 
 private:
     void setCurrentSprite();
     void updateSpriteFrame();
     void handleWalking();
+    void walk();
+    void stopWalking();
     void handleJumping();
-    void updateJump(int = 0);
-    void handleAttack();
+    void jump(int = 0);
+    void stopJumping(int);
+    void handleAttacking();
+    void attack();
+    void stopAttacking();
     void changeDirection(PlayerDirections);
     bool checkSceneBoundries(int = 0);
-    void stopWalking();
 
     Sound * jumpSound;
     Sound * walkSound;

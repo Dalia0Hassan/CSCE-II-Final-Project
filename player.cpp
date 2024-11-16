@@ -21,16 +21,19 @@ Player::Player() {
         spriteSheets.push_back(SpriteSheet(PLAYER_ACTIONS[i], path));
     }
 
-    // Setting up the timer
-    horizontalMovementTimer = new QTimer(this);
-    connect(horizontalMovementTimer, SIGNAL(timeout()), this, SLOT(handleHorizontalMovement()));
+    // Walk timer
+    walkTimer = new QTimer(this);
+    connect(walkTimer, &QTimer::timeout, this, &Player::walk);
 
+    // Jump timer
     jumpTimer = new QTimer(this);
 
+    // Sprite timer
     spriteTimer = new QTimer(this);
     connect(spriteTimer, &QTimer::timeout, this, &Player::updateSpriteFrame);
     spriteTimer->start(75); // Update every 100ms
 
+    // Set the initial sprite
     updateSpriteFrame();
 
 }
@@ -50,7 +53,7 @@ void Player::keyPressEvent(QKeyEvent *event) {
 
     // Handle the key press
     if (event->key() == Qt::Key_A)
-        currentActions.insert(ATTACK_1);
+        handleAttacking();
     else if (event->key() == Qt::Key_Shift)
         currentActions.insert(RUN);
     else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
@@ -98,6 +101,9 @@ void Player::setCurrentSprite() {
     else
         newDominantAction = IDLE;
 
+    if (newDominantAction != dominantAction)
+        currentSpriteFrame = 0;
+
     dominantAction = newDominantAction;
 }
 
@@ -113,10 +119,8 @@ void Player::updateSpriteFrame() {
         if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1)
             currentSpriteFrame++;
         // If it is done, remove the action
-        else {
-
+        else
             currentActions.remove(dominantAction);
-        }
     }
 
     // Set the new sprite frame
@@ -136,24 +140,23 @@ void Player::handleWalking() {
     // Play Walking sound
     walkSound->play();
     // Start timer to handle horizontal movement
-    horizontalMovementTimer->start(16);
+    walkTimer->start(16);
 }
 
 void Player::stopWalking() {
     // Stop walking sound
     walkSound->stop();
     // Stop the horizontal movement timer
-    horizontalMovementTimer->stop();
+    walkTimer->stop();
     // Remove the walking action
     currentActions.remove(WALK);
     // Update the sprite sheet
     setCurrentSprite();
 }
 
-void Player::handleHorizontalMovement() {
-
+void Player::walk() {
     // Do not move if the player is jumping
-    if (currentActions.contains(JUMP)) {
+    if (isJumping || isAttacking) {
         stopWalking();
         return;
     }
@@ -189,7 +192,6 @@ void Player::handleJumping() {
     // Do not jump if the player is already jumping
     if (isJumping)
         return;
-    // qDebug() << "Player jumps";
     // Insert the jump action
     currentActions.insert(JUMP);
     isJumping = true;
@@ -203,12 +205,12 @@ void Player::handleJumping() {
         int xShift = 0;
         if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
             xShift = direction * (currentActions.contains(RUN) ? runShift : walkShift);
-        updateJump(xShift);
+        jump(xShift);
     });
     jumpTimer->start(16);
 }
 
-void Player::updateJump(int xShift) {
+void Player::jump(int xShift) {
     // Update the player's vertical velocity (gravity effect)
     verticalVelocity += gravity;
 
@@ -222,25 +224,58 @@ void Player::updateJump(int xShift) {
     }
 
     // Stop the jump when the player lands (y position >= ground level)
-    if (y() >= game->getGroundLevel() - boundingRect().height()) {
-        //print a message
-        qDebug() << "Player landed";
-        // Reset to ground level
-        setY(game->getGroundLevel() - boundingRect().height());
-        // Remove the jump action
-        currentActions.remove(JUMP);
-        isJumping = false;
-        // Stop the jump timer
-        jumpTimer->stop();
-        // If the player was moving before jumping, continue moving
-        if (xShift != 0)
-            handleWalking();
-        // Update the sprite sheet
-        setCurrentSprite();
-    }
+    if (y() >= game->getGroundLevel() - boundingRect().height())
+        stopJumping(xShift);
 }
 
-void Player::handleAttack() {
+void Player::stopJumping(int xShift) {
+    // Reset to ground level
+    setY(game->getGroundLevel() - boundingRect().height());
+    // Remove the jump action
+    currentActions.remove(JUMP);
+    isJumping = false;
+    // Stop the jump timer
+    jumpTimer->stop();
+    // If the player was moving before jumping, continue moving
+    if (xShift != 0)
+        handleWalking();
+    // Update the sprite sheet
+    setCurrentSprite();
+}
+
+void Player::handleAttacking() {
+    // Avoid conflicting attacks
+    if (isAttacking)
+        return;
+    // Insert the attack action
+    currentActions.insert(ATTACK_1);
+    isAttacking = true;
+
+    // One time attack
+    attack();
+}
+
+void Player::attack() {
+    // Play attack sound
+    // attackSound->play();
+    // Stop the attack after 250ms
+    setCurrentSprite();
+    QTimer::singleShot(375, this, &Player::stopAttacking);
+
+}
+
+void Player::stopAttacking() {
+
+    // Stop attacking
+    isAttacking = false;
+    currentActions.remove(ATTACK_1);
+
+    // Restart walking timer
+    if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
+        handleWalking();
+
+    // Update the sprite sheet
+    setCurrentSprite();
 
 }
 
@@ -259,4 +294,13 @@ bool Player::checkSceneBoundries(int dx) {
     if (newXPosition - sceneOffset < 0 || newXPosition + sceneOffset > game->scene->width() - boundingRect().width())
         return false;
     return true;
+}
+
+// Free memory
+Player::~Player() {
+    delete jumpSound;
+    delete walkSound;
+    delete spriteTimer;
+    delete jumpTimer;
+    delete walkTimer;
 }

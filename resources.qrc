@@ -44,5 +44,15 @@
         <file>Assets/audio/man_jumps_1.wav</file>
         <file>Assets/audio/man_jumps_2.wav</file>
         <file>Assets/audio/man_walks.wav</file>
+        <file>Assets/images/Raider_2/Attack.png</file>
+        <file>Assets/images/Raider_2/Dead.png</file>
+        <file>Assets/images/Raider_2/Hurt.png</file>
+        <file>Assets/images/Raider_2/Idle.png</file>
+        <file>Assets/images/Raider_2/Jump.png</file>
+        <file>Assets/images/Raider_2/Recharge.png</file>
+        <file>Assets/images/Raider_2/Run.png</file>
+        <file>Assets/images/Raider_2/Shot_1.png</file>
+        <file>Assets/images/Raider_2/Shot_2.png</file>
+        <file>Assets/images/Raider_2/Walk.png</file>
     </qresource>
 </RCC>

@@ -6,5 +6,4 @@ SpriteSheet::SpriteSheet(QString name, QString path) {
     frameWidth = 128;
     frameHeight = pixmap.height();
     frameCount = pixmap.width() / 128;
-    frameDuration = 100;
 }

@@ -10,6 +10,7 @@ enum PlayerActions {
     RUN,
     JUMP,
     SHIELD,
+    SHOT_1,
     DEAD,
     ATTACK_1,
     ATTACK_2,
