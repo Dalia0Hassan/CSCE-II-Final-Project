@@ -50,18 +50,15 @@ void Player::keyPressEvent(QKeyEvent *event) {
 
     // Handle the key press
     if (event->key() == Qt::Key_A)
-        currentActions.insert(ATTACK_3);
+        currentActions.insert(ATTACK_1);
     else if (event->key() == Qt::Key_Shift)
         currentActions.insert(RUN);
-    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-        currentActions.insert(WALK);
+    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
+        // Handle walking
         handleWalking();
-    }
-    else if (event->key() == Qt::Key_Space) {
-        currentActions.insert(JUMP);
+    else if (event->key() == Qt::Key_Space)
         // Handle the jump
-        handleJumping(currentActions.contains(WALK));
-    }
+        handleJumping();
 
     // Update the sprite sheet
     setCurrentSprite();
@@ -81,25 +78,19 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
     keysPressed.remove(event->key());
 
     // Handle the key release
-    if (
-        (event->key() == Qt::Key_Left && !keysPressed.contains(Qt::Key_Right))
-        || (event->key() == Qt::Key_Right && !keysPressed.contains(Qt::Key_Left))
-        ) {
+    if ((event->key() == Qt::Key_Left && !keysPressed.contains(Qt::Key_Right))
+        || (event->key() == Qt::Key_Right && !keysPressed.contains(Qt::Key_Left)))
         stopWalking();
-    }
     else if (event->key() == Qt::Key_Shift)
             currentActions.remove(RUN);
-    else if (event->key() == Qt::Key_A) {
-        currentActions.remove(ATTACK_3);
-    }
 
     // Update the sprite sheet
     setCurrentSprite();
 }
 void Player::setCurrentSprite() {
     PlayerActions newDominantAction;
-    if (currentActions.contains(ATTACK_3))
-        newDominantAction = ATTACK_3;
+    if (currentActions.contains(ATTACK_1))
+        newDominantAction = ATTACK_1;
     else if (currentActions.contains(JUMP))
         newDominantAction = JUMP;
     else if (currentActions.contains(WALK))
@@ -117,12 +108,13 @@ void Player::updateSpriteFrame() {
         currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].frameCount;
 
     // If it is a one-time action, progress the animation once
-    else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::ATTACK_3) {
+    else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::ATTACK_1) {
         // If the animation is not done, progress
         if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1)
             currentSpriteFrame++;
         // If it is done, remove the action
         else {
+
             currentActions.remove(dominantAction);
         }
     }
@@ -139,6 +131,8 @@ void Player::updateSpriteFrame() {
 }
 
 void Player::handleWalking() {
+    // Insert the walking action
+    currentActions.insert(WALK);
     // Play Walking sound
     walkSound->play();
     // Start timer to handle horizontal movement
@@ -159,8 +153,10 @@ void Player::stopWalking() {
 void Player::handleHorizontalMovement() {
 
     // Do not move if the player is jumping
-    if (currentActions.contains(JUMP))
+    if (currentActions.contains(JUMP)) {
+        stopWalking();
         return;
+    }
 
     // Shift amount for walking and running
     int shift = currentActions.contains(RUN) ? 5 : 3;
@@ -183,37 +179,57 @@ void Player::handleHorizontalMovement() {
         stopWalking();
 }
 
-void Player::handleJumping(bool moveHorizontally) {
+void Player::handleJumping() {
+    // Do not jump if the player is already jumping
+    if (isJumping)
+        return;
+    // qDebug() << "Player jumps";
+    // Insert the jump action
     currentActions.insert(JUMP);
-    verticalVelocity = jumpVelocity; // Set the initial jump speed
-    // disconnect timer and start it again
+    isJumping = true;
+    // Play jump sound
+    jumpSound->play();
+    // Set the initial vertical velocity
+    verticalVelocity = jumpVelocity;
+    // Disconnect timer and start it again
     jumpTimer->disconnect();
     jumpTimer->connect(jumpTimer, &QTimer::timeout, this, [=](){
-        updateJump(moveHorizontally);
+        int xShift = 0;
+        if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
+            xShift = direction * (currentActions.contains(RUN) ? runShift : walkShift);
+        updateJump(xShift);
     });
     jumpTimer->start(16);
 }
 
-void Player::updateJump(bool moveHorizontally) {
+void Player::updateJump(int xShift) {
     // Update the player's vertical velocity (gravity effect)
     verticalVelocity += gravity;
 
     // Move the player by the current vertical velocity
     setY(y() + verticalVelocity);
 
-    // Move the player horizontally if needed
-    if (moveHorizontally) {
-        setX(x() + direction * 3);
+    // Adjust the view to follow the player
+    if (xShift != 0 && checkSceneBoundries(xShift)) {
+        setX(x() + xShift);
         emit playerPositionChanged();
     }
 
     // Stop the jump when the player lands (y position >= ground level)
-    // Assuming ground; level is y = 300 (adjust as needed)
-    if (y() >= game->height() * 0.88 - boundingRect().height()) {
-        setY(game->height() * 0.88 - boundingRect().height());              // Reset to ground level
+    if (y() >= game->getGroundLevel() - boundingRect().height()) {
+        //print a message
+        qDebug() << "Player landed";
+        // Reset to ground level
+        setY(game->getGroundLevel() - boundingRect().height());
+        // Remove the jump action
         currentActions.remove(JUMP);
-        jumpTimer->stop();      // Stop the jump timer
-        verticalVelocity = 0;   // Reset the velocity
+        isJumping = false;
+        // Stop the jump timer
+        jumpTimer->stop();
+        // If the player was moving before jumping, continue moving
+        if (xShift != 0)
+            handleWalking();
+        // Update the sprite sheet
         setCurrentSprite();
     }
 }

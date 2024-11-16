@@ -6,7 +6,7 @@
 
 Game::Game() {
 
-    setFixedSize(800, 600);
+    setFixedSize(viewWidth, viewHeight);
     // Set scene width to be 5 times the width of hte view and position it at the beginning of the view
     // Set a fixed size for the view
     scene = new QGraphicsScene();
@@ -19,7 +19,7 @@ Game::Game() {
     player = new Player();
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     scene->addItem(player);
-    player->setPos(width() / 2 - player->boundingRect().height() / 2, height() * 0.88 - player->boundingRect().height());
+    player->setPos(width() / 2 - player->boundingRect().height() / 2, groundLevel - player->boundingRect().height());
     player->setFocus();
     connect(player, &Player::playerPositionChanged, this, &Game::moveWithPlayer);
     moveWithPlayer();

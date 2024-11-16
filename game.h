@@ -9,6 +9,9 @@
 class Game : public QGraphicsView
 {
     Q_OBJECT
+private:
+    const int viewWidth = 800, viewHeight = 600;
+    const float groundLevel = 0.88 * viewHeight;
 public:
     QGraphicsScene* scene;
     Player * player;
@@ -18,6 +21,7 @@ public:
     void centerOnPlayer();
     int lastWidth = 0, lastHeight = 0;
     Sound *bgMusicPlayer;
+    float getGroundLevel() { return groundLevel; }
 public slots:
     void moveWithPlayer();
     // void resizeEvent(QResizeEvent *event) override;

@@ -15,7 +15,7 @@ class Player : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 private:
-    int sceneOffset = 100;
+    const int sceneOffset = 100, walkShift = 3, runShift = 5;
     QSet<int> keysPressed;
     QSet<PlayerActions> currentActions;
     PlayerActions dominantAction = IDLE;
@@ -25,6 +25,7 @@ private:
     float verticalVelocity = 0.0f;
     QVector<SpriteSheet> spriteSheets;
     int currentSpriteFrame;
+    bool isJumping = false;
 
     QTimer *spriteTimer;
     QTimer *jumpTimer;
@@ -41,8 +42,8 @@ private:
     void setCurrentSprite();
     void updateSpriteFrame();
     void handleWalking();
-    void handleJumping(bool);
-    void updateJump(bool);
+    void handleJumping();
+    void updateJump(int = 0);
     void handleAttack();
     void changeDirection(PlayerDirections);
     bool checkSceneBoundries(int = 0);
