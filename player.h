@@ -8,7 +8,8 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QImage>
-#include <QMediaPlayer>
+#include <sound.h>
+#include <QKeyEvent>
 
 class Player : public QObject, public QGraphicsPixmapItem
 {
@@ -42,8 +43,8 @@ private:
     void updateJump(bool);
     void handleAttack();
 
-    QMediaPlayer * jumpSound;
-    QMediaPlayer * walkSound;
+    Sound * jumpSound;
+    Sound * walkSound;
 
 signals:
     void playerPositionChanged();

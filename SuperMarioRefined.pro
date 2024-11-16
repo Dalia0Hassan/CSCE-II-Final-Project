@@ -13,12 +13,14 @@ SOURCES += \
     main.cpp \
     player.cpp \
     playerAction.cpp \
+    sound.cpp \
     spritesheet.cpp
 
 HEADERS += \
     game.h \
     player.h \
     playerAction.h \
+    sound.h \
     spritesheet.h
 
 FORMS +=

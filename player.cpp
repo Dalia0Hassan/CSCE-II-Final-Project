@@ -8,16 +8,12 @@ extern Game *game;
 
 Player::Player() {
 
-    // Load audio files
-    jumpSound = new QMediaPlayer();
-    jumpSound->setAudioOutput(new QAudioOutput());
-    jumpSound->setSource(QUrl("qrc:/Assets/audio/man_jumps_1.wav"));
-    walkSound = new QMediaPlayer();
-    walkSound->setAudioOutput(new QAudioOutput());
-    walkSound->setSource(QUrl("qrc:/Assets/audio/man_walks.wav"));
+    // Loading audio files
+    jumpSound = new Sound("qrc:/Assets/audio/man_jumps_1.wav");
+    walkSound = new Sound("qrc:/Assets/audio/man_walks.wav", 1, QMediaPlayer::Infinite);
 
 
-    // Loading the sprite sheets
+    // Loading sprite sheets
     for(int i = 0; i < PLAYER_ACTIONS.size(); i++) {
         QString filename = PLAYER_ACTIONS[i];
         filename[0] = filename[0].toUpper();

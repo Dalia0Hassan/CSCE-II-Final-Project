@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include "player.h"
 #include <QMediaPlayer>
+#include <sound.h>
 
 class Game : public QGraphicsView
 {
@@ -16,7 +17,7 @@ public:
     ~Game();
     void centerOnPlayer();
     int lastWidth = 0, lastHeight = 0;
-    QMediaPlayer *bgMusicPlayer;
+    Sound *bgMusicPlayer;
 public slots:
     void moveWithPlayer();
     // void resizeEvent(QResizeEvent *event) override;

@@ -35,19 +35,8 @@ Game::Game() {
     show();
 
     // Add Background Music
-    bgMusicPlayer = new QMediaPlayer();
-    QAudioOutput* audioOutput = new QAudioOutput();
-    audioOutput->setVolume(0.125);
-    bgMusicPlayer->setAudioOutput(audioOutput);
-    bgMusicPlayer->setSource(QUrl("qrc:/Assets/audio/bg_music_1.mp3"));
+    bgMusicPlayer = new Sound("qrc:/Assets/audio/bg_music_1.mp3", 0.125, QMediaPlayer::Loops::Infinite);
     bgMusicPlayer->play();
-
-
-    connect(bgMusicPlayer, &QMediaPlayer::playbackStateChanged, [this](QMediaPlayer::PlaybackState state) {
-        if (state == QMediaPlayer::StoppedState) {
-            this->bgMusicPlayer->play();
-        }
-    });
 }
 
 Game::~Game() {
@@ -55,18 +44,6 @@ Game::~Game() {
     delete player;
     delete bgMusicPlayer;
 }
-// void Game::resizeEvent(QResizeEvent *event) {
-//     // Calculate the ratio in width and height change
-//     double ratioWidth = (double)event->size().width() / lastWidth;
-//     double ratioHeight = (double)event->size().height() / lastHeight;
-//     scene->setSceneRect(0, 0, scene->width() * ratioWidth, event->size().height());
-//     scene->setBackgroundBrush(QBrush(QPixmap(":/Assets/images/bg_8.jpg").scaled(width(), height())));
-
-//     lastWidth = width();
-//     lastHeight = height();
-//     QGraphicsView::resizeEvent(event);
-// }
-
 
 
 void Game::moveWithPlayer() {
