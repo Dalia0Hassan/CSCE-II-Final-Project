@@ -16,6 +16,11 @@ enum PlayerActions {
     ATTACK_3
 };
 
+enum PlayerDirections {
+    LEFT = -1,
+    RIGHT = 1
+};
+
 extern const QVector<QString> PLAYER_ACTIONS;
 
 

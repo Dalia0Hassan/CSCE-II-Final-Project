@@ -1,8 +1,8 @@
 #include "player.h"
-#include "qaudiooutput.h"
 #include <QDebug>
 #include <QKeyEvent>
 #include <game.h>
+#include <QTime>
 
 extern Game *game;
 
@@ -24,7 +24,6 @@ Player::Player() {
     // Setting up the timer
     horizontalMovementTimer = new QTimer(this);
     connect(horizontalMovementTimer, SIGNAL(timeout()), this, SLOT(handleHorizontalMovement()));
-    horizontalMovementTimer->start(16);
 
     jumpTimer = new QTimer(this);
 
@@ -37,6 +36,11 @@ Player::Player() {
 }
 
 void Player::keyPressEvent(QKeyEvent *event) {
+
+    // Avoid auto repeat key press
+    if (event->isAutoRepeat())
+        return;
+
     // Avoid multiple key presses
     if (keysPressed.contains(event->key()))
         return;
@@ -49,8 +53,10 @@ void Player::keyPressEvent(QKeyEvent *event) {
         currentActions.insert(ATTACK_3);
     else if (event->key() == Qt::Key_Shift)
         currentActions.insert(RUN);
-    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
+    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
         currentActions.insert(WALK);
+        handleWalking();
+    }
     else if (event->key() == Qt::Key_Space) {
         currentActions.insert(JUMP);
         // Handle the jump
@@ -63,6 +69,10 @@ void Player::keyPressEvent(QKeyEvent *event) {
 
 void Player::keyReleaseEvent(QKeyEvent *event) {
 
+    // Avoid auto repeat key release
+    if (event->isAutoRepeat())
+        return;
+
     // Avoid multiple removes
     if (!keysPressed.contains(event->key()))
         return;
@@ -71,8 +81,10 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
     keysPressed.remove(event->key());
 
     // Handle the key release
-    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
-            currentActions.remove(WALK);
+    if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
+        currentActions.remove(WALK);
+        emit stopWalking();
+    }
     else if (event->key() == Qt::Key_Shift)
             currentActions.remove(RUN);
     else if (event->key() == Qt::Key_A) {
@@ -84,90 +96,88 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
 }
 void Player::setCurrentSprite() {
     PlayerActions newDominantAction;
-    if (currentActions.contains(ATTACK_3)) {
+    if (currentActions.contains(ATTACK_3))
         newDominantAction = ATTACK_3;
-    } else if (currentActions.contains(JUMP)) {
+    else if (currentActions.contains(JUMP))
         newDominantAction = JUMP;
-    } else if (currentActions.contains(RUN)) {
+    else if (currentActions.contains(RUN))
         newDominantAction = RUN;
-    } else if (currentActions.contains(WALK)) {
+    else if (currentActions.contains(WALK))
         newDominantAction = WALK;
-    } else {
+    else
         newDominantAction = IDLE;
-    }
+
     dominantAction = newDominantAction;
 }
 
 void Player::updateSpriteFrame() {
-    if (dominantAction == PlayerActions::WALK || dominantAction == PlayerActions::RUN || dominantAction == PlayerActions::IDLE) {
-        // qDebug() << "Called Inside\n" << currentSpriteFrame << ' ' << spriteSheets[dominantAction].frameCount << '\n';
-        currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].frameCount; // Loop the walk animation
-        // qDebug() << "Called Inside\n" << currentSpriteFrame << ' ' << spriteSheets[dominantAction].frameCount << '\n';
-    } else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::ATTACK_3) {
-        if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1) {
-            currentSpriteFrame++; // Only progress for one-time actions
-        } else {
+
+    // If it is a repeating action, loop the animation
+    if (dominantAction == PlayerActions::WALK || dominantAction == PlayerActions::RUN || dominantAction == PlayerActions::IDLE)
+        currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].frameCount;
+
+    // If it is a one-time action, progress the animation once
+    else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::ATTACK_3) {
+        // If the animation is not done, progress
+        if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1)
+            currentSpriteFrame++;
+        // If it is done, remove the action
+        else {
             currentActions.remove(dominantAction);
         }
     }
 
     // Set the new sprite frame
-    // setCurrentSprite();
-    setPixmap(spriteSheets[dominantAction].pixmap.copy(currentSpriteFrame * spriteSheets[dominantAction].frameWidth, 0, spriteSheets[dominantAction].frameWidth, spriteSheets[dominantAction].frameHeight));
+    setPixmap(
+        spriteSheets[dominantAction].pixmap.copy(
+            currentSpriteFrame * spriteSheets[dominantAction].frameWidth,
+            0,
+            spriteSheets[dominantAction].frameWidth,
+            spriteSheets[dominantAction].frameHeight
+            )
+        );
+}
+
+void Player::handleWalking() {
+    // Play Walking sound
+    walkSound->play();
+    // Start timer to handle horizontal movement
+    horizontalMovementTimer->start(16);
+
+    // Detect when the player should stop walking
+    connect(this, &Player::stopWalking, this, [=](){
+        // Stop walking sound
+        walkSound->stop();
+        // Stop the horizontal movement timer
+        horizontalMovementTimer->stop();
+    });
 }
 
 void Player::handleHorizontalMovement() {
 
-    if (currentActions.contains(JUMP)) return;
-    int shift = 3;
-    if (keysPressed.contains(Qt::Key_Shift)) {
-        shift = 5;
-        currentActions.insert(PlayerActions::RUN);
-    }
-    if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right)) {
-        // Replay the walking sound when it ends
-        if (walkSound->playbackState() == QMediaPlayer::PlaybackState::StoppedState) {
-            walkSound->play();
-        }
-    } else {
-        walkSound->stop();
-    }
+    // Do not move if the player is jumping
+    if (currentActions.contains(JUMP))
+        return;
+
+    // Shift amount for walking and running
+    int shift = currentActions.contains(RUN) ? 5 : 3;
+
+    // If the player wants to walk to the left
     if (keysPressed.contains(Qt::Key_Left)) {
-        // Check if new position will make the palyer go out of the screen
-        if (x() - shift <= 100) {
-            currentActions.remove(WALK);
-            currentActions.remove(RUN);
-            setCurrentSprite();
+        // Make the displacement in negative direction
+        shift *= -1;
 
-            return;
-        }
-        if (direction == 1) {
-            setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
-            direction = -1;
-        }
-        setPos(x() - shift, y());
-        emit playerPositionChanged();
-    } else if (keysPressed.contains(Qt::Key_Right)) {
-        if (x() + shift >= game->scene->width() - boundingRect().width() - 100) {
-            currentActions.remove(WALK);
-            currentActions.remove(RUN);
-            setCurrentSprite();
+        // Change the direction of the player if needed
+        changeDirection(LEFT);
+    } else if (keysPressed.contains(Qt::Key_Right))
+        changeDirection(RIGHT);
 
-            return;
-        }
-        if (direction == -1) {
-            setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
-            direction = 1;
-        }
-        // Check if new position will make the palyer go out of the screen
-        if (x() + shift > game->scene->width() - boundingRect().width() - 100) {
-
-            return;
-        }
-        emit playerPositionChanged();
+    // Move the player if it is within the scene boundaries
+    if (checkSceneBoundries(shift)) {
         setPos(x() + shift, y());
-    }
-
+        emit playerPositionChanged();
+    } else
+        emit stopWalking();
 }
 
 void Player::handleJumping(bool moveHorizontally) {
@@ -207,4 +217,21 @@ void Player::updateJump(bool moveHorizontally) {
 
 void Player::handleAttack() {
 
+}
+
+void Player::changeDirection(PlayerDirections newDirection) {
+    // If the player is already facing the new direction, do nothing
+    if (direction == newDirection)
+        return;
+
+    // Change the direction of the player
+    setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
+    direction = newDirection;
+}
+
+bool Player::checkSceneBoundries(int dx) {
+    int newXPosition = x() + dx;
+    if (newXPosition - sceneOffset < 0 || newXPosition + sceneOffset > game->scene->width() - boundingRect().width())
+        return false;
+    return true;
 }
