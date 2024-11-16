@@ -85,7 +85,6 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
         (event->key() == Qt::Key_Left && !keysPressed.contains(Qt::Key_Right))
         || (event->key() == Qt::Key_Right && !keysPressed.contains(Qt::Key_Left))
         ) {
-        currentActions.remove(WALK);
         stopWalking();
     }
     else if (event->key() == Qt::Key_Shift)
@@ -103,10 +102,8 @@ void Player::setCurrentSprite() {
         newDominantAction = ATTACK_3;
     else if (currentActions.contains(JUMP))
         newDominantAction = JUMP;
-    else if (currentActions.contains(RUN))
-        newDominantAction = RUN;
     else if (currentActions.contains(WALK))
-        newDominantAction = WALK;
+        newDominantAction = currentActions.contains(RUN) ? RUN : WALK;
     else
         newDominantAction = IDLE;
 
@@ -153,6 +150,10 @@ void Player::stopWalking() {
     walkSound->stop();
     // Stop the horizontal movement timer
     horizontalMovementTimer->stop();
+    // Remove the walking action
+    currentActions.remove(WALK);
+    // Update the sprite sheet
+    setCurrentSprite();
 }
 
 void Player::handleHorizontalMovement() {
