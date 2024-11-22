@@ -72,3 +72,13 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+# CMake generated files
+CMakeFiles
+CMakeCache.txt
+build
+install_manifest.txt
+cmake-build-debug
+out.txt
+CMakeLists.txt.user
+
+

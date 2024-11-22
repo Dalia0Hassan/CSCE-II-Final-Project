@@ -1,9 +1,15 @@
 #include "game.h"
+#include "block.h"
+#include "trap.h"
+#include "settingsmanager.h"
+
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QResizeEvent>
-#include <QAudioOutput>
 
+
+// TODO: use settings manager instead of hardcoding values
+// SM.value("key") -> value
 Game::Game() {
 
     setFixedSize(viewWidth, viewHeight);
@@ -33,6 +39,8 @@ Game::Game() {
     // Add Background Music
     bgMusicPlayer = new Sound("qrc:/Assets/audio/bg_music_1.mp3", 0.125, QMediaPlayer::Loops::Infinite);
     bgMusicPlayer->play();
+
+    createMap();
 }
 
 Game::~Game() {
@@ -55,4 +63,32 @@ void Game::KeyPressEvent(QKeyEvent *event)
     // Prevent moving the view if it has focus
     if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left)
         return;
+}
+
+
+void Game::createMap() {
+    // create traps in all ground
+    QString path2 = SM.settings->value("spikes/1").toString();
+    for ( int i = 0 ; i < 40 ; i++){
+        Trap *trap = new Trap(800+ i*100, this->getGroundLevel() - 30 , path2 ,2 );
+        elements.push_back(trap);
+        scene->addItem(trap);
+    }
+
+    QString path3 = SM.settings->value("blocks/2").toString();
+
+    for ( int i = 0 ; i < 20 ; i++){
+        Block *block = new Block(700+ i*100, 415 ,   path3 , 1 );
+        elements.push_back(block);
+        scene->addItem(block);
+    }
+
+    QString path4 = SM.settings->value("blocks/3").toString();
+
+    for ( int i = 0 ; i < 14 ; i++){
+        Block *block = new Block(2800+ i*150, 415 - i*10 ,   path4 , 1);
+        elements.push_back(block);
+        scene->addItem(block);
+    }
+
 }
