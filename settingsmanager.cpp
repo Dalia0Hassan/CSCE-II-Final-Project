@@ -2,6 +2,7 @@
 
 SettingsManager::SettingsManager() {
     // Create new instance of QSettings if it is not already created
+    QSettings::setDefaultFormat(QSettings::IniFormat);
     settings = new QSettings();
     settings->setValue("audio/jump1" , "qrc:/Assets/audio/man_jumps_1.wav");
     settings->setValue("audio/walk1" , "qrc:/Assets/audio/man_walks.wav");
@@ -20,11 +21,16 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/4", ":/Assets/images/Blocks/4.png");
     settings->setValue("blocks/5", ":/Assets/images/Blocks/5.png");
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
+
+    for(const auto &value : settings->allKeys()) {
+        qDebug() << value << " : " << settings->value(value).toString();
+    }
 }
+
 SettingsManager::~SettingsManager() {
     // Delete the settings object
     delete settings;
 }
 
-SettingsManager SM;
+SettingsManager SM = SettingsManager();
 
