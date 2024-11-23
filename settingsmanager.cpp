@@ -26,5 +26,5 @@ SettingsManager::~SettingsManager() {
     delete settings;
 }
 
-SettingsManager SM = SettingsManager();
+SettingsManager SM;
 

@@ -15,7 +15,6 @@ SOURCES += \
     player.cpp \
     playerAction.cpp \
     settingsmanager.cpp \
-    settingsmanager.cpp \
     sound.cpp \
     spritesheet.cpp \
     trap.cpp
