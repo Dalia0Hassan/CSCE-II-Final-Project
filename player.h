@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QImage>
-#include <sound.h>
+#include "sound.h"
 #include <QKeyEvent>
 
 class Player : public QObject, public QGraphicsPixmapItem

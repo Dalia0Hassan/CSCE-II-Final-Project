@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include "player.h"
 #include <QMediaPlayer>
-#include <sound.h>
+#include "sound.h"
 
 class Game : public QGraphicsView
 {
@@ -12,6 +12,7 @@ class Game : public QGraphicsView
 private:
     const int viewWidth = 800, viewHeight = 600;
     const float groundLevel = 0.88 * viewHeight;
+    QVector<QGraphicsPixmapItem*> elements;
 public:
     QGraphicsScene* scene;
     Player * player;
@@ -22,6 +23,7 @@ public:
     int lastWidth = 0, lastHeight = 0;
     Sound *bgMusicPlayer;
     float getGroundLevel() { return groundLevel; }
+    void createMap();
 public slots:
     void moveWithPlayer();
     void KeyPressEvent(QKeyEvent *event);

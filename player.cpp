@@ -1,7 +1,7 @@
 #include "player.h"
 #include <QDebug>
 #include <QKeyEvent>
-#include <game.h>
+#include "game.h"
 #include <QTime>
 
 extern Game *game;

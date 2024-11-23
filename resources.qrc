@@ -54,5 +54,9 @@
         <file>Assets/images/Raider_2/Shot_1.png</file>
         <file>Assets/images/Raider_2/Shot_2.png</file>
         <file>Assets/images/Raider_2/Walk.png</file>
+        <file>Assets/images/Spikes/1.png</file>
+        <file>Assets/images/Blocks/1.png</file>
+        <file>Assets/images/Blocks/2.png</file>
+        <file>Assets/images/Blocks/3.png</file>
     </qresource>
 </RCC>
