@@ -21,10 +21,6 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/4", ":/Assets/images/Blocks/4.png");
     settings->setValue("blocks/5", ":/Assets/images/Blocks/5.png");
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
-
-    for(const auto &value : settings->allKeys()) {
-        qDebug() << value << " : " << settings->value(value).toString();
-    }
 }
 
 SettingsManager::~SettingsManager() {

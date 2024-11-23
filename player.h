@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include "playerAction.h"
+#include "qpainter.h"
+#include "qpen.h"
 #include "spritesheet.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
@@ -20,7 +22,7 @@ private:
     QSet<PlayerActions> currentActions;
     PlayerActions dominantAction = IDLE;
     PlayerDirections direction = RIGHT;
-    float jumpVelocity = -10.0f;
+    float jumpVelocity = -12.0f;
     float gravity = 0.5f;
     float verticalVelocity = 0.0f;
     QVector<SpriteSheet> spriteSheets;
@@ -36,10 +38,20 @@ public:
     Player();
     ~Player();
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override {
+        // Draw the pixmap
+        QGraphicsPixmapItem::paint(painter, option, widget);
+
+        // Draw the outline
+        painter->setPen(QPen(Qt::red, 3)); // Change color and thickness as needed
+        painter->drawRect(boundingRect());
+    }
     public slots:
-    void keyPressEvent(QKeyEvent * event);
-    void keyReleaseEvent(QKeyEvent * event);
-    void focusOutEvent(QFocusEvent * event);
+    void keyPressEvent(QKeyEvent * event) override;
+    void keyReleaseEvent(QKeyEvent * event) override;
+    void focusOutEvent(QFocusEvent * event) override;
+
+
 
 private:
     void setCurrentSprite();
@@ -54,7 +66,7 @@ private:
     void attack();
     void stopAttacking();
     void changeDirection(PlayerDirections);
-    bool checkSceneBoundries(int = 0);
+    bool validateNewPosition(double = 0, double = 0);
 
     Sound * jumpSound;
     Sound * walkSound;

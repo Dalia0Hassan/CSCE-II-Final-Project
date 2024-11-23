@@ -3,6 +3,8 @@
 #include <QKeyEvent>
 #include "game.h"
 #include <QTime>
+#include "block.h"
+#include "trap.h"
 
 extern Game *game;
 
@@ -35,7 +37,6 @@ Player::Player() {
 
     // Set the initial sprite
     updateSpriteFrame();
-
 }
 
 void Player::keyPressEvent(QKeyEvent *event) {
@@ -126,10 +127,10 @@ void Player::updateSpriteFrame() {
     // Set the new sprite frame
     setPixmap(
         spriteSheets[dominantAction].pixmap.copy(
-            currentSpriteFrame * spriteSheets[dominantAction].frameWidth,
-            0,
-            spriteSheets[dominantAction].frameWidth,
-            spriteSheets[dominantAction].frameHeight
+            currentSpriteFrame * spriteSheets[dominantAction].frameWidth + spriteSheets[dominantAction].spriteContentOffsetX,
+            spriteSheets[dominantAction].spriteContentOffsetY,
+            spriteSheets[dominantAction].spriteContentWidth + (dominantAction == RUN || dominantAction == JUMP ? 10 : 0),
+            spriteSheets[dominantAction].spriteContentHeight
             )
         );
 }
@@ -155,6 +156,7 @@ void Player::stopWalking() {
 }
 
 void Player::walk() {
+
     // Do not move if the player is jumping
     if (isJumping || isAttacking) {
         stopWalking();
@@ -175,7 +177,7 @@ void Player::walk() {
         changeDirection(RIGHT);
 
     // Move the player if it is within the scene boundaries
-    if (checkSceneBoundries(shift)) {
+    if (validateNewPosition(shift)) {
         setPos(x() + shift, y());
         emit playerPositionChanged();
     } else
@@ -218,7 +220,7 @@ void Player::jump(int xShift) {
     setY(y() + verticalVelocity);
 
     // Adjust the view to follow the player
-    if (xShift != 0 && checkSceneBoundries(xShift)) {
+    if (xShift != 0 && validateNewPosition(xShift)) {
         setX(x() + xShift);
         emit playerPositionChanged();
     }
@@ -289,10 +291,20 @@ void Player::changeDirection(PlayerDirections newDirection) {
     direction = newDirection;
 }
 
-bool Player::checkSceneBoundries(int dx) {
-    int newXPosition = x() + dx;
+bool Player::validateNewPosition(double dx, double dy) {
+    int newXPosition = x() + dx, newYPosition = y() + dy;
     if (newXPosition - sceneOffset < 0 || newXPosition + sceneOffset > game->scene->width() - boundingRect().width())
         return false;
+
+    // QRectF newRect(newXPosition, newYPosition, boundingRect().width(), boundingRect().height());
+    // QList<QGraphicsItem*> collidingItems = game->scene->items(newRect);
+    // for(QGraphicsItem * item : collidingItems) {
+    //     if (item == this)
+    //         continue;
+    //     if (item->type() == Block::Type || item->type() == Trap::Type)
+    //         return false;
+    // }
+
     return true;
 }
 
