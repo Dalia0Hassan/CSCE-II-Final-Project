@@ -14,7 +14,7 @@ public:
     int frameHeight = 128;
     int spriteContentOffsetX = 45;
     int spriteContentOffsetY = 45;
-    int spriteContentWidth = 30;
+    int spriteContentWidth = 38;
     int spriteContentHeight = 83;
     SpriteSheet(QString name, QString path);
 };

@@ -70,7 +70,7 @@ void Game::createMap() {
     // create traps in all ground
     QString path2 = SM.settings->value("spikes/1").toString();
     for ( int i = 0 ; i < 40 ; i++){
-        Trap *trap = new Trap(800+ i*100, this->getGroundLevel() - 30 , path2 ,2 );
+        Trap *trap = new Trap(800+ i*200, this->getGroundLevel() - 11 , path2 ,2 );
         elements.push_back(trap);
         scene->addItem(trap);
     }
@@ -78,7 +78,7 @@ void Game::createMap() {
     QString path3 = SM.settings->value("blocks/2").toString();
 
     for ( int i = 0 ; i < 20 ; i++){
-        Block *block = new Block(700+ i*100, 415 ,   path3 , 1 );
+        Block *block = new Block(700+ i*150, 385 ,   path3 , 1 );
         elements.push_back(block);
         scene->addItem(block);
     }
@@ -86,7 +86,7 @@ void Game::createMap() {
     QString path4 = SM.settings->value("blocks/3").toString();
 
     for ( int i = 0 ; i < 14 ; i++){
-        Block *block = new Block(2800+ i*150, 415 - i*10 ,   path4 , 1);
+        Block *block = new Block(2800+ i*150, 300 - i*10 ,   path4 , 1);
         elements.push_back(block);
         scene->addItem(block);
     }

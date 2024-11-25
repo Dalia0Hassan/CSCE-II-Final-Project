@@ -22,30 +22,35 @@ private:
     QSet<PlayerActions> currentActions;
     PlayerActions dominantAction = IDLE;
     PlayerDirections direction = RIGHT;
-    float jumpVelocity = -12.0f;
-    float gravity = 0.5f;
+    float jumpVelocity = -10.75f;
+    float gravity = 0.375f;
     float verticalVelocity = 0.0f;
     QVector<SpriteSheet> spriteSheets;
     int currentSpriteFrame;
+    bool isWalking = false;
+    bool isRunning = false;
     bool isJumping = false;
+    bool isFalling = false;
     bool isAttacking = false;
 
     QTimer *spriteTimer;
     QTimer *jumpTimer;
+    QTimer *fallTimer;
     QTimer *walkTimer;
     QTimer *attackTimer;
+    QTimer *boundriesTimer;
 public:
     Player();
     ~Player();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override {
-        // Draw the pixmap
-        QGraphicsPixmapItem::paint(painter, option, widget);
+    // void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override {
+    //     // Draw the pixmap
+    //     QGraphicsPixmapItem::paint(painter, option, widget);
 
-        // Draw the outline
-        painter->setPen(QPen(Qt::red, 3)); // Change color and thickness as needed
-        painter->drawRect(boundingRect());
-    }
+    //     // Draw the outline
+    //     painter->setPen(QPen(Qt::red, 3)); // Change color and thickness as needed
+    //     painter->drawRect(boundingRect());
+    // }
     public slots:
     void keyPressEvent(QKeyEvent * event) override;
     void keyReleaseEvent(QKeyEvent * event) override;
@@ -61,12 +66,16 @@ private:
     void stopWalking();
     void handleJumping();
     void jump(int = 0);
-    void stopJumping(int);
+    void stopJumping();
+    void handleFalling();
+    void fall(int = 0);
+    void stopFalling();
     void handleAttacking();
     void attack();
     void stopAttacking();
     void changeDirection(PlayerDirections);
-    bool validateNewPosition(double = 0, double = 0);
+    QGraphicsItem* validateNewPosition(double = 0, double = 0);
+    double findBestY(double, double, double);
 
     Sound * jumpSound;
     Sound * walkSound;

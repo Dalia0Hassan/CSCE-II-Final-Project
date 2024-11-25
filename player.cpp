@@ -29,13 +29,23 @@ Player::Player() {
 
     // Jump timer
     jumpTimer = new QTimer(this);
+    fallTimer = new QTimer(this);
 
     // Sprite timer
     spriteTimer = new QTimer(this);
     connect(spriteTimer, &QTimer::timeout, this, &Player::updateSpriteFrame);
-    spriteTimer->start(75); // Update every 100ms
+    spriteTimer->start(75); // Update every 75ms
 
-    // Set the initial sprite
+    // boundriesTimer = new QTimer(this);
+    // connect(boundriesTimer, &QTimer::timeout, this, [=](){
+    //     if (!isJumping && !isFalling && qAbs(game->getGroundLevel() - boundingRect().height() - y()) > 2 && (validateNewPosition(0, 3) == nullptr || validateNewPosition(5, 3) == nullptr || validateNewPosition(-5, 3) == nullptr)) {
+    //         handleFalling();
+    //         stopWalking();
+    //         return;
+    //     }
+    // });
+    // boundriesTimer->start(16);
+
     updateSpriteFrame();
 }
 
@@ -56,7 +66,7 @@ void Player::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_A)
         handleAttacking();
     else if (event->key() == Qt::Key_Shift)
-        currentActions.insert(RUN);
+        isRunning = true;
     else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
         // Handle walking
         handleWalking();
@@ -86,19 +96,19 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
         || (event->key() == Qt::Key_Right && !keysPressed.contains(Qt::Key_Left)))
         stopWalking();
     else if (event->key() == Qt::Key_Shift)
-            currentActions.remove(RUN);
+        isRunning = false;
 
     // Update the sprite sheet
     setCurrentSprite();
 }
 void Player::setCurrentSprite() {
     PlayerActions newDominantAction;
-    if (currentActions.contains(ATTACK_1))
+    if (isAttacking)
         newDominantAction = ATTACK_1;
-    else if (currentActions.contains(JUMP))
+    else if (isJumping)
         newDominantAction = JUMP;
-    else if (currentActions.contains(WALK))
-        newDominantAction = currentActions.contains(RUN) ? RUN : WALK;
+    else if (isWalking)
+        newDominantAction = isRunning ? RUN : WALK;
     else
         newDominantAction = IDLE;
 
@@ -120,8 +130,8 @@ void Player::updateSpriteFrame() {
         if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1)
             currentSpriteFrame++;
         // If it is done, remove the action
-        else
-            currentActions.remove(dominantAction);
+        // else
+        //     currentActions.remove(dominantAction);
     }
 
     // Set the new sprite frame
@@ -129,7 +139,7 @@ void Player::updateSpriteFrame() {
         spriteSheets[dominantAction].pixmap.copy(
             currentSpriteFrame * spriteSheets[dominantAction].frameWidth + spriteSheets[dominantAction].spriteContentOffsetX,
             spriteSheets[dominantAction].spriteContentOffsetY,
-            spriteSheets[dominantAction].spriteContentWidth + (dominantAction == RUN || dominantAction == JUMP ? 10 : 0),
+            spriteSheets[dominantAction].spriteContentWidth,
             spriteSheets[dominantAction].spriteContentHeight
             )
         );
@@ -137,7 +147,9 @@ void Player::updateSpriteFrame() {
 
 void Player::handleWalking() {
     // Insert the walking action
-    currentActions.insert(WALK);
+    // currentActions.insert(WALK);
+
+    isWalking = true;
     // Play Walking sound
     walkSound->play();
     // Start timer to handle horizontal movement
@@ -150,21 +162,29 @@ void Player::stopWalking() {
     // Stop the horizontal movement timer
     walkTimer->stop();
     // Remove the walking action
-    currentActions.remove(WALK);
+    // currentActions.remove(WALK);
+    isWalking = false;
     // Update the sprite sheet
     setCurrentSprite();
 }
 
 void Player::walk() {
 
+    qDebug() << "Walking";
     // Do not move if the player is jumping
     if (isJumping || isAttacking) {
         stopWalking();
         return;
     }
 
+    if (!isJumping && !isFalling && qAbs(game->getGroundLevel() - boundingRect().height() - y()) > 2 && (validateNewPosition(0, 3) == nullptr || validateNewPosition(5, 3) == nullptr || validateNewPosition(-5, 3) == nullptr)) {
+        handleFalling();
+        stopWalking();
+        return;
+    }
+
     // Shift amount for walking and running
-    int shift = currentActions.contains(RUN) ? 5 : 3;
+    int shift = isRunning ? 5 : 3;
 
     // If the player wants to walk to the left
     if (keysPressed.contains(Qt::Key_Left)) {
@@ -177,7 +197,7 @@ void Player::walk() {
         changeDirection(RIGHT);
 
     // Move the player if it is within the scene boundaries
-    if (validateNewPosition(shift)) {
+    if (validateNewPosition(shift) == nullptr) {
         setPos(x() + shift, y());
         emit playerPositionChanged();
     } else
@@ -194,8 +214,8 @@ void Player::handleJumping() {
     // Do not jump if the player is already jumping
     if (isJumping)
         return;
-    // Insert the jump action
-    currentActions.insert(JUMP);
+
+    // Change state
     isJumping = true;
     // Play jump sound
     jumpSound->play();
@@ -203,44 +223,130 @@ void Player::handleJumping() {
     verticalVelocity = jumpVelocity;
     // Disconnect timer and start it again
     jumpTimer->disconnect();
+
+    if (keysPressed.contains(Qt::Key_Left))
+        changeDirection(LEFT);
+    else if (keysPressed.contains(Qt::Key_Right))
+        changeDirection(RIGHT);
+
     jumpTimer->connect(jumpTimer, &QTimer::timeout, this, [=](){
         int xShift = 0;
         if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
-            xShift = direction * (currentActions.contains(RUN) ? runShift : walkShift);
+            xShift = direction * (isRunning ? runShift : walkShift);
         jump(xShift);
     });
     jumpTimer->start(16);
 }
 
-void Player::jump(int xShift) {
-    // Update the player's vertical velocity (gravity effect)
-    verticalVelocity += gravity;
 
-    // Move the player by the current vertical velocity
+
+void Player::jump(int xShift) {
+    qDebug("Jumping");
+    // Update vertical position
+    verticalVelocity += gravity;
     setY(y() + verticalVelocity);
 
+    if (verticalVelocity >= 0) {
+        jumpTimer->stop();
+        handleFalling();
+        return;
+    }
+
+    if (validateNewPosition(xShift, verticalVelocity) == nullptr)
+        setY(y() + verticalVelocity);
+    else {
+        setY(y() + findBestY(xShift, verticalVelocity, 0));
+        handleFalling();
+        return;
+    }
+
     // Adjust the view to follow the player
-    if (xShift != 0 && validateNewPosition(xShift)) {
+    if (xShift != 0 && validateNewPosition(xShift) == nullptr) {
         setX(x() + xShift);
         emit playerPositionChanged();
     }
 
-    // Stop the jump when the player lands (y position >= ground level)
-    if (y() >= game->getGroundLevel() - boundingRect().height())
-        stopJumping(xShift);
+    verticalVelocity += gravity;
 }
 
-void Player::stopJumping(int xShift) {
-    // Reset to ground level
-    setY(game->getGroundLevel() - boundingRect().height());
+void Player::stopJumping() {
     // Remove the jump action
-    currentActions.remove(JUMP);
+    // currentActions.remove(JUMP);
     isJumping = false;
+    isFalling = false;
     // Stop the jump timer
     jumpTimer->stop();
     // If the player was moving before jumping, continue moving
-    if (xShift != 0)
+    if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
         handleWalking();
+    // Update the sprite sheet
+    setCurrentSprite();
+}
+
+void Player::handleFalling() {
+    // Do not fall if the player is already falling
+    if (isFalling)
+        return;
+
+    verticalVelocity = 0;
+
+    // Change state
+    isFalling = true;
+    // Disconnect timer and start it again
+    fallTimer->disconnect();
+    fallTimer->connect(fallTimer, &QTimer::timeout, this, [=](){
+        int xShift = 0;
+        if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
+            xShift = direction * (isRunning ? runShift : walkShift);
+        fall(xShift);
+    });
+    fallTimer->start(16);
+}
+
+void Player::fall(int xShift) {
+
+    if (y() > game->getGroundLevel() - boundingRect().height()) {
+        setY(game->getGroundLevel() - boundingRect().height());
+        stopFalling();
+        return;
+    }
+
+    QGraphicsItem *collidingItem = validateNewPosition(xShift, verticalVelocity);
+    // Move the player by the current vertical velocity
+    if (collidingItem == nullptr)
+        setY(y() + verticalVelocity);
+    else {
+
+        // check if the player's foot is above the block
+        if (y() + boundingRect().height() - verticalVelocity <= collidingItem->y()) {
+            setY(collidingItem->y() - boundingRect().height());
+            stopFalling();
+            return;
+        } else {
+            setY(y() + verticalVelocity);
+        }
+    }
+
+    // Adjust the view to follow the player
+    if (xShift != 0 && validateNewPosition(xShift) == nullptr) {
+        setX(x() + xShift);
+        emit playerPositionChanged();
+    }
+
+
+    verticalVelocity += gravity;
+}
+
+void Player::stopFalling() {
+    // Remove the fall action
+    isFalling = false;
+    isJumping = false;
+    // Stop the fall timer
+    fallTimer->stop();
+
+    if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
+        handleWalking();
+
     // Update the sprite sheet
     setCurrentSprite();
 }
@@ -250,7 +356,7 @@ void Player::handleAttacking() {
     if (isAttacking)
         return;
     // Insert the attack action
-    currentActions.insert(ATTACK_1);
+    /*currentActions.insert(ATTACK_1)*/;
     isAttacking = true;
 
     // One time attack
@@ -270,7 +376,7 @@ void Player::stopAttacking() {
 
     // Stop attacking
     isAttacking = false;
-    currentActions.remove(ATTACK_1);
+    // currentActions.remove(ATTACK_1);
 
     // Restart walking timer
     if (keysPressed.contains(Qt::Key_Left) || keysPressed.contains(Qt::Key_Right))
@@ -291,21 +397,35 @@ void Player::changeDirection(PlayerDirections newDirection) {
     direction = newDirection;
 }
 
-bool Player::validateNewPosition(double dx, double dy) {
+QGraphicsItem* Player::validateNewPosition(double dx, double dy) {
     int newXPosition = x() + dx, newYPosition = y() + dy;
     if (newXPosition - sceneOffset < 0 || newXPosition + sceneOffset > game->scene->width() - boundingRect().width())
-        return false;
+        return this;
 
-    // QRectF newRect(newXPosition, newYPosition, boundingRect().width(), boundingRect().height());
-    // QList<QGraphicsItem*> collidingItems = game->scene->items(newRect);
-    // for(QGraphicsItem * item : collidingItems) {
-    //     if (item == this)
-    //         continue;
-    //     if (item->type() == Block::Type || item->type() == Trap::Type)
-    //         return false;
-    // }
+    QRectF newRect(newXPosition, newYPosition, boundingRect().width(), boundingRect().height());
+    QList<QGraphicsItem*> collidingItems = game->scene->items(newRect);
+    for(QGraphicsItem * item : collidingItems) {
+        if (item == this)
+            continue;
+        if (item->type() == Block::Type || item->type() == Trap::Type)
+            return item;
+    }
 
-    return true;
+    return nullptr;
+}
+
+double Player::findBestY(double dx, double dy, double l) {
+    double r = dy;
+    int loop = 30;
+    while(loop--) {
+        double mid = (l + r) / 2;
+        if (validateNewPosition(dx, mid) == nullptr) {
+            l = mid;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
 }
 
 // Free memory
@@ -315,4 +435,5 @@ Player::~Player() {
     delete spriteTimer;
     delete jumpTimer;
     delete walkTimer;
+    delete fallTimer;
 }
