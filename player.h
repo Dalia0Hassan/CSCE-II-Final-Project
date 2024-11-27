@@ -80,10 +80,10 @@ private:
     void die();
     void stopDying();
     void handleCollision();
-    void handleCoinCollision();
-    void handleShieldCollision();
-    void handlePowerUpCollision();
-    void handleDangerCollision();
+    void handleCoinCollision(QGraphicsItem*);
+    void handleShieldCollision(QGraphicsItem*);
+    void handlePowerUpCollision(QGraphicsItem*);
+    void handleDangerCollision(QGraphicsItem*);
 
     void changeDirection(PlayerDirections);
     QGraphicsItem* validateNewPosition(double = 0, double = 0);
@@ -97,6 +97,10 @@ private:
     Sound * jumpSound;
     Sound * walkSound;
     Sound * dieSound;
+    Sound * destroySound;
+    Sound * shieldActiviationSound;
+    Sound * wooHooSound;
+    Sound * coinSound;
 
     void animateAction(PlayerActions, int = 0);
 signals:

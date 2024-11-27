@@ -59,5 +59,10 @@
         <file>Assets/images/Blocks/3.png</file>
         <file>Assets/images/Fighter/Die.png</file>
         <file>Assets/audio/male_death_sound.mp3</file>
+        <file>Assets/audio/coin_pickup.mp3</file>
+        <file>Assets/audio/coin_pickup_2.mp3</file>
+        <file>Assets/audio/shield_active.mp3</file>
+        <file>Assets/audio/shield_hit.m4a</file>
+        <file>Assets/audio/woo_hoo.mp3</file>
     </qresource>
 </RCC>

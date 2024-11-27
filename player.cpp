@@ -3,8 +3,6 @@
 #include <QKeyEvent>
 #include "game.h"
 #include <QTime>
-#include "block.h"
-#include "trap.h"
 
 extern Game *game;
 
@@ -14,6 +12,11 @@ Player::Player() {
     jumpSound = new Sound("qrc:/Assets/audio/man_jumps_1.wav");
     walkSound = new Sound("qrc:/Assets/audio/man_walks.wav", 1, QMediaPlayer::Infinite);
     dieSound = new Sound("qrc:/Assets/audio/male_death_sound.mp3");
+    shieldActiviationSound = new Sound("qrc:/Assets/audio/shield_active.mp3");
+    coinSound = new Sound("qrc:/Assets/audio/coin_pickup.mp3");
+    destroySound = new Sound("qrc:/Assets/audio/shield_hit.m4a");
+    wooHooSound = new Sound("qrc:/Assets/audio/woo_hoo.mp3");
+
 
 
     // Loading sprite sheets
@@ -44,6 +47,9 @@ Player::Player() {
 
 
     updateSpriteFrame();
+
+    // enable shield after 3 seconds
+    QTimer::singleShot(3000, this, &Player::enableShield);
 
 }
 
@@ -416,16 +422,31 @@ void Player::stopDying() {
 
 void Player::handleCollision() {
     for(QGraphicsItem * item : collidingItems()) {
-        if (item->type() == TrapType) {
-            handleDying();
-        }
+        if (item == shield || item == this) continue;
+        if (item->type() == TrapType)
+            handleDangerCollision(item);
     }
+}
+
+void Player::handleDangerCollision(QGraphicsItem* item) {
+    if (hasShield && item->type() == TrapType) {
+        // Remove item from the scene and delete it
+        game->scene->removeItem(item);
+        delete item;
+
+        // Play destroy sound
+        destroySound->play();
+    } else
+        handleDying();
 }
 
 void Player::enableShield() {
     if (!shield) {
         shield = new ShieldEffect(this);
         game->scene->addItem(shield);
+        shieldActiviationSound->play();
+        wooHooSound->play();
+        hasShield = true;
     }
 }
 
@@ -434,6 +455,7 @@ void Player::disableShield() {
         game->scene->removeItem(shield);
         delete shield;
         shield = nullptr;
+        hasShield = false;
     }
 }
 
