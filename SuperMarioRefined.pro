@@ -11,23 +11,29 @@ CONFIG += c++17
 SOURCES += \
     block.cpp \
     game.cpp \
+    level.cpp \
     main.cpp \
     player.cpp \
-    playerAction.cpp \
     settingsmanager.cpp \
+    shieldeffect.cpp \
     sound.cpp \
     spritesheet.cpp \
-    trap.cpp
+    state.cpp \
+    trap.cpp \
+    utils.cpp
 
 HEADERS += \
     block.h \
     game.h \
+    level.h \
     player.h \
-    playerAction.h \
     settingsmanager.h \
+    shieldeffect.h \
     sound.h \
     spritesheet.h \
-    trap.h
+    state.h \
+    trap.h \
+    utils.h
 
 FORMS +=
 

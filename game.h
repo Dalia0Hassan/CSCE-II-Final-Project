@@ -10,10 +10,11 @@ class Game : public QGraphicsView
 {
     Q_OBJECT
 private:
-    const int viewWidth = 800, viewHeight = 600;
-    const float groundLevel = 0.88 * viewHeight;
     QVector<QGraphicsPixmapItem*> elements;
 public:
+    const int viewWidth = 800, viewHeight = 600;
+    const int playerStartOffset = 100, playerEndOffset = 100;
+    const float groundLevel = 0.88 * viewHeight;
     QGraphicsScene* scene;
     Player * player;
     QGraphicsPixmapItem* backgroundItem;
