@@ -33,5 +33,4 @@ enum CustomTypes {
 
 extern const QVector<QString> PLAYER_ACTIONS;
 
-
 #endif // UTILS_H

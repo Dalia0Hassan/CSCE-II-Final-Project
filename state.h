@@ -1,12 +1,15 @@
 #ifndef STATE_H
 #define STATE_H
 
-class State
+#include "qobject.h"
+
+class State : public QObject
 {
+    Q_OBJECT
 private:
     int coins = 0;
     int lives = 5;
-    int level = 1;
+    int level = 5;
     bool isGameOver = false;
     bool isPaused = false;
 public:
@@ -25,6 +28,13 @@ public:
     void setLevel(int level);
     void setIsGameOver(bool isGameOver);
     void setIsPaused(bool isPaused);
+    void incrementCoins();
+    void decrementLives();
+    void increamentLives();
+
+    // Signals
+signals:
+    void stateChanged();
 };
 
 #endif // STATE_H

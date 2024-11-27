@@ -51,6 +51,9 @@ Player::Player() {
     // enable shield after 3 seconds
     QTimer::singleShot(3000, this, &Player::enableShield);
 
+    // Remove it after 5 seconds
+    QTimer::singleShot(5000, this, &Player::disableShield);
+
 }
 
 void Player::keyPressEvent(QKeyEvent *event) {
@@ -516,12 +519,12 @@ void Player::start() {
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=](){
-        if (x() > game->playerStartOffset) {
+        if (x() > game->getPlayerStartOffset()) {
             setX(x() - 15);
             emit playerPositionChanged();
         }
         else {
-            setPos(game->playerStartOffset, game->getGroundLevel() - boundingRect().height());
+            setPos(game->getPlayerStartOffset(), game->getGroundLevel() - boundingRect().height());
             timer->stop();
             timer->disconnect();
             delete timer;
