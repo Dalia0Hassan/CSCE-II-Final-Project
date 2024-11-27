@@ -1,14 +1,14 @@
 #include "level.h"
 
-Level::Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath, int sceneHeight, int playerStartOffset, int playerEndOffset) {
+Level::Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath, int sceneHeight, int startOffset, int endOffset) {
     this->levelNumber = levelNumber;
     this->sceneWidth = sceneWidth;
     this->groundLevel = groundLevel;
     this->playerLives = playerLives;
     this->backgroundPath = backgroundPath;
     this->sceneHeight = sceneHeight;
-    this->playerStartOffset = playerStartOffset;
-    this->playerEndOffset = playerEndOffset;
+    this->startOffset = startOffset;
+    this->endOffset = endOffset;
 }
 
 // Getters
@@ -17,8 +17,8 @@ int Level::getSceneWidth() { return sceneWidth; }
 int Level::getSceneHeight() { return sceneHeight; }
 float Level::getGroundLevel() { return groundLevel * sceneHeight; }
 int Level::getPlayerLives() { return playerLives; }
-int Level::getPlayerStartOffset() { return playerStartOffset; }
-int Level::getPlayerEndOffset() { return playerEndOffset; }
+int Level::getStartOffset() { return startOffset; }
+int Level::getEndOffset() { return endOffset; }
 QString Level::getBackgroundPath() { return backgroundPath; }
 
 // Initialize levels

@@ -8,6 +8,9 @@ SettingsManager::SettingsManager() {
     settings->setValue("audio/walk1" , "qrc:/Assets/audio/man_walks.wav");
     settings->setValue("audio/bg/music1", "qrc:/Assets/audio/bg_music_1.mp3");
     settings->setValue("audio/volume", .125);
+    settings->setValue("window/defaultStartOffset", 100);
+    settings->setValue("window/defaultEndOffset", 100);
+    settings->setValue("scene/defaultHeight", 600);
     settings->setValue("window/width", 800);
     settings->setValue("window/height", 600);
     settings->setValue("player/pos_x", 150);
@@ -21,9 +24,6 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/4", ":/Assets/images/Blocks/4.png");
     settings->setValue("blocks/5", ":/Assets/images/Blocks/5.png");
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
-    settings->setValue("playerDefaultStartOffset", 100);
-    settings->setValue("playerDefaultEndOffset", 100);
-    settings->setValue("sceneDefaultHeight", 600);
 
     // Levels
     settings->setValue("levels/1/sceneWidth", 3000);
@@ -46,6 +46,26 @@ SettingsManager::SettingsManager() {
     settings->setValue("levels/5/groundLevel", 0.74);
     settings->setValue("levels/5/playerLives", 2);
     settings->setValue("levels/5/backgroundPath", ":/Assets/images/bg_5.jpg");
+
+
+    // Player
+    settings->setValue("player/walkSpeed", 3);
+    settings->setValue("player/runSpeed", 5);
+    settings->setValue("player/jumpSpeed", -10.75);
+    settings->setValue("player/gravity", 0.375);
+    settings->setValue("player/spriteFrameWidth", 128);
+    settings->setValue("player/spriteFrameHeight", 128);
+    settings->setValue("player/spriteContentOffsetX", 45);
+    settings->setValue("player/spriteContentOffsetY", 45);
+    settings->setValue("player/spriteContentWidth", 38);
+    settings->setValue("player/spriteContentHeight", 83);
+    settings->setValue("player/spriteUpdateInterval", 75);
+    settings->setValue("player/spriteTimerInterval", 75);
+    settings->setValue("player/walkTimerInterval", 16);
+    settings->setValue("player/jumpTimerInterval", 16);
+    settings->setValue("player/fallTimerInterval", 16);
+    settings->setValue("player/collisionTimerInterval", 16);
+    settings->setValue("player/attackTimerInterval", 16);
 }
 
 SettingsManager::~SettingsManager() {

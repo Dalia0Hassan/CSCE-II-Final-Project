@@ -14,24 +14,24 @@ private:
     int sceneHeight;
     float groundLevel;
     int playerLives;
-    int playerStartOffset;
-    int playerEndOffset;
+    int startOffset;
+    int endOffset;
     QString backgroundPath;
 
 public:
     Level() {};
     Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath,
         int sceneHeight = SM.settings->value("sceneDefaultHeight").toInt(),
-        int playerStartOffset = SM.settings->value("playerDefaultStartOffset").toInt(),
-        int playerEndOffset = SM.settings->value("playerDefaultEndOffset").toInt());
+        int startOffset = SM.settings->value("playerDefaultStartOffset").toInt(),
+        int endOffset = SM.settings->value("playerDefaultEndOffset").toInt());
 
     // Getters
     int getLevelNumber();
     int getSceneWidth();
     int getSceneHeight();
     float getGroundLevel();
-    int getPlayerStartOffset();
-    int getPlayerEndOffset();
+    int getStartOffset();
+    int getEndOffset();
     int getPlayerLives();
     QString getBackgroundPath();
 };

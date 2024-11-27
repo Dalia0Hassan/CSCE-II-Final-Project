@@ -36,7 +36,7 @@ Game::Game() {
 
     // Player coordinates
 
-    player->setPos(getPlayerStartOffset(), getGroundLevel() - player->boundingRect().height());
+    player->setPos(getStartOffset(), getGroundLevel() - player->boundingRect().height());
 
 
     // Connect player position change signal to move with player
@@ -72,12 +72,12 @@ float Game::getGroundLevel() {
     return level.getGroundLevel();
 }
 
-int Game::getPlayerStartOffset() {
-    return level.getPlayerStartOffset();
+int Game::getStartOffset() {
+    return level.getStartOffset();
 }
 
-int Game::getPlayerEndOffset() {
-    return level.getPlayerEndOffset();
+int Game::getEndOffset() {
+    return level.getEndOffset();
 }
 
 int Game::getSceneWidth() {

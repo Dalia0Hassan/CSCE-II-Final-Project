@@ -28,8 +28,8 @@ public:
 
     // Getters
     float getGroundLevel();
-    int getPlayerStartOffset();
-    int getPlayerEndOffset();
+    int getStartOffset();
+    int getEndOffset();
     int getSceneWidth();
     int getSceneHeight();
 
