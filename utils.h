@@ -1,8 +1,9 @@
-#ifndef PLAYERACTIONS_H
-#define PLAYERACTIONS_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <QString>
 #include <QVector>
+#include <QGraphicsItem>
 
 enum PlayerActions {
     IDLE,
@@ -11,7 +12,7 @@ enum PlayerActions {
     JUMP,
     SHIELD,
     SHOT_1,
-    DEAD,
+    DIE,
     ATTACK_1,
     ATTACK_2,
     ATTACK_3
@@ -22,7 +23,15 @@ enum PlayerDirections {
     RIGHT = 1
 };
 
+enum CustomTypes {
+    BlockType = QGraphicsItem::UserType + 1,
+    TrapType,
+    ShieldType,
+    CoinType,
+    PowerUpType
+};
+
 extern const QVector<QString> PLAYER_ACTIONS;
 
 
-#endif // PLAYERACTIONS_H
+#endif // UTILS_H

@@ -1,9 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "playerAction.h"
-#include "qpainter.h"
-#include "qpen.h"
+#include "utils.h"
+#include "shieldeffect.h"
 #include "spritesheet.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
@@ -32,13 +31,17 @@ private:
     bool isJumping = false;
     bool isFalling = false;
     bool isAttacking = false;
+    bool isDying = false;
+    bool hasShield = false;
 
-    QTimer *spriteTimer;
-    QTimer *jumpTimer;
-    QTimer *fallTimer;
-    QTimer *walkTimer;
-    QTimer *attackTimer;
-    QTimer *boundriesTimer;
+    QTimer *spriteTimer = nullptr;
+    QTimer *jumpTimer = nullptr;
+    QTimer *fallTimer = nullptr;
+    QTimer *walkTimer = nullptr;
+    QTimer *attackTimer = nullptr;
+    QTimer *collisionTimer = nullptr;
+
+    ShieldEffect * shield = nullptr;
 public:
     Player();
     ~Player();
@@ -67,18 +70,33 @@ private:
     void handleJumping();
     void jump(int = 0);
     void stopJumping();
-    void handleFalling();
+    void handleFalling(int = 0);
     void fall(int = 0);
     void stopFalling();
     void handleAttacking();
     void attack();
     void stopAttacking();
+    void handleDying();
+    void die();
+    void stopDying();
+    void handleCollision();
+    void handleCoinCollision();
+    void handleShieldCollision();
+    void handlePowerUpCollision();
+    void handleDangerCollision();
+
     void changeDirection(PlayerDirections);
     QGraphicsItem* validateNewPosition(double = 0, double = 0);
     double findBestY(double, double, double);
+    void enableShield();
+    void disableShield();
+    void hide();
+    void show();
+    void start();
 
     Sound * jumpSound;
     Sound * walkSound;
+    Sound * dieSound;
 
     void animateAction(PlayerActions, int = 0);
 signals:

@@ -13,21 +13,23 @@ SOURCES += \
     game.cpp \
     main.cpp \
     player.cpp \
-    playerAction.cpp \
     settingsmanager.cpp \
+    shieldeffect.cpp \
     sound.cpp \
     spritesheet.cpp \
-    trap.cpp
+    trap.cpp \
+    utils.cpp
 
 HEADERS += \
     block.h \
     game.h \
     player.h \
-    playerAction.h \
     settingsmanager.h \
+    shieldeffect.h \
     sound.h \
     spritesheet.h \
-    trap.h
+    trap.h \
+    utils.h
 
 FORMS +=
 

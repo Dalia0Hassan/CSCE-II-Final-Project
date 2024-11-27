@@ -11,7 +11,6 @@
         <file>Assets/images/Fighter/Attack_1.png</file>
         <file>Assets/images/Fighter/Attack_2.png</file>
         <file>Assets/images/Fighter/Attack_3.png</file>
-        <file>Assets/images/Fighter/Dead.png</file>
         <file>Assets/images/Fighter/Hurt.png</file>
         <file>Assets/images/Fighter/Idle.png</file>
         <file>Assets/images/Fighter/Jump.png</file>
@@ -58,5 +57,7 @@
         <file>Assets/images/Blocks/1.png</file>
         <file>Assets/images/Blocks/2.png</file>
         <file>Assets/images/Blocks/3.png</file>
+        <file>Assets/images/Fighter/Die.png</file>
+        <file>Assets/audio/male_death_sound.mp3</file>
     </qresource>
 </RCC>
