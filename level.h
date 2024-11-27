@@ -21,9 +21,9 @@ private:
 public:
     Level() {};
     Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath,
-        int sceneHeight = SM.settings->value("sceneDefaultHeight").toInt(),
-        int startOffset = SM.settings->value("playerDefaultStartOffset").toInt(),
-        int endOffset = SM.settings->value("playerDefaultEndOffset").toInt());
+        int sceneHeight = SM.settings->value("scene/defaultHeight").toInt(),
+        int startOffset = SM.settings->value("window/defaultStartOffset").toInt(),
+        int endOffset = SM.settings->value("window/defaultEndOffset").toInt());
 
     // Getters
     int getLevelNumber();

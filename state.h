@@ -7,9 +7,9 @@ class State : public QObject
 {
     Q_OBJECT
 private:
-    int coins = 0;
-    int lives = 5;
-    int level = 5;
+    int coins;
+    int lives;
+    int level = 1;
     bool isGameOver = false;
     bool isPaused = false;
 public:

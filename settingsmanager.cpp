@@ -4,18 +4,23 @@ SettingsManager::SettingsManager() {
     // Create new instance of QSettings if it is not already created
     QSettings::setDefaultFormat(QSettings::IniFormat);
     settings = new QSettings();
-    settings->setValue("audio/jump1" , "qrc:/Assets/audio/man_jumps_1.wav");
-    settings->setValue("audio/walk1" , "qrc:/Assets/audio/man_walks.wav");
-    settings->setValue("audio/bg/music1", "qrc:/Assets/audio/bg_music_1.mp3");
+
+    // Audio
+    settings->setValue("audio/jump" , "qrc:/Assets/audio/man_jumps_1.wav");
+    settings->setValue("audio/walk" , "qrc:/Assets/audio/man_walks.wav");
+    settings->setValue("audio/bg/music", "qrc:/Assets/audio/bg_music_1.mp3");
     settings->setValue("audio/volume", .125);
+
+    // View
     settings->setValue("window/defaultStartOffset", 100);
     settings->setValue("window/defaultEndOffset", 100);
-    settings->setValue("scene/defaultHeight", 600);
     settings->setValue("window/width", 800);
     settings->setValue("window/height", 600);
-    settings->setValue("player/pos_x", 150);
-    settings->setValue("player/pos_y", 200);
-    settings->setValue("level1/bg" , ":/Assets/images/bg_8.jpg");
+
+    // Scene
+    settings->setValue("scene/defaultHeight", 600);
+
+    // Images
     settings->setValue("spikes/1", ":/Assets/images/Spikes/1.png");
     settings->setValue("spikes/2", ":/Assets/images/Spikes/2.png");
     settings->setValue("blocks/1", ":/Assets/images/Blocks/1.png");
@@ -25,7 +30,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/5", ":/Assets/images/Blocks/5.png");
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
 
-    // Levels
+    // Levels (Scene width, ground level, player lives, background path)
     settings->setValue("levels/1/sceneWidth", 3000);
     settings->setValue("levels/1/groundLevel", 0.88);
     settings->setValue("levels/1/playerLives", 5);

@@ -57,7 +57,7 @@ Game::Game() {
 
 
     // Add Background Music
-    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music1").toString(), 0.125, QMediaPlayer::Loops::Infinite);
+    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
     bgMusicPlayer->play();
 
 }
