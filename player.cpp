@@ -24,7 +24,14 @@ Player::Player() {
         QString filename = PLAYER_ACTIONS[i];
         filename[0] = filename[0].toUpper();
         QString path = QString(":/Assets/images/Fighter/%1.png").arg(filename);
-        spriteSheets.push_back(SpriteSheet(PLAYER_ACTIONS[i], path));
+        spriteSheets.push_back(SpriteSheet(
+            PLAYER_ACTIONS[i], path,
+            SM.settings->value("player/spriteFrameWidth").toInt(),
+            SM.settings->value("player/spriteFrameHeight").toInt(),
+            SM.settings->value("player/spriteContentOffsetX").toInt(),
+            SM.settings->value("player/spriteContentOffsetY").toInt(),
+            SM.settings->value("player/spriteContentWidth").toInt(),
+            SM.settings->value("player/spriteContentHeight").toInt()));
     }
 
     // Walk timer
@@ -50,6 +57,9 @@ Player::Player() {
 
     // enable shield after 3 seconds
     QTimer::singleShot(3000, this, &Player::enableShield);
+
+    // Remove it after 5 seconds
+    QTimer::singleShot(5000, this, &Player::disableShield);
 
 }
 
@@ -128,12 +138,12 @@ void Player::updateSpriteFrame() {
 
     // If it is a repeating action, loop the animation
     if (dominantAction == PlayerActions::WALK || dominantAction == PlayerActions::RUN || dominantAction == PlayerActions::IDLE)
-        currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].frameCount;
+        currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].getFrameCount();
 
     // If it is a one-time action, progress the animation once
     else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::ATTACK_1 || dominantAction == PlayerActions::DIE) {
         // If the animation is not done, progress
-        if (currentSpriteFrame < spriteSheets[dominantAction].frameCount - 1)
+        if (currentSpriteFrame < spriteSheets[dominantAction].getFrameCount() - 1)
             currentSpriteFrame++;
         // If it is done, remove the action
         // else
@@ -143,10 +153,10 @@ void Player::updateSpriteFrame() {
     // Set the new sprite frame
     setPixmap(
         spriteSheets[dominantAction].pixmap.copy(
-            currentSpriteFrame * spriteSheets[dominantAction].frameWidth + spriteSheets[dominantAction].spriteContentOffsetX,
-            spriteSheets[dominantAction].spriteContentOffsetY,
-            spriteSheets[dominantAction].spriteContentWidth,
-            spriteSheets[dominantAction].spriteContentHeight
+            currentSpriteFrame * spriteSheets[dominantAction].getFrameWidth() + spriteSheets[dominantAction].getContentOffsetX(),
+            spriteSheets[dominantAction].getContentOffsetY(),
+            spriteSheets[dominantAction].getContentWidth(),
+            spriteSheets[dominantAction].getContentHeight()
             )
         );
 }
@@ -516,12 +526,12 @@ void Player::start() {
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=](){
-        if (x() > game->playerStartOffset) {
+        if (x() > game->getStartOffset()) {
             setX(x() - 15);
             emit playerPositionChanged();
         }
         else {
-            setPos(game->playerStartOffset, game->getGroundLevel() - boundingRect().height());
+            setPos(game->getStartOffset(), game->getGroundLevel() - boundingRect().height());
             timer->stop();
             timer->disconnect();
             delete timer;

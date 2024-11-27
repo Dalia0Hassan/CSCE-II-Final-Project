@@ -2,28 +2,41 @@
 #define GAME_H
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include "level.h"
 #include "player.h"
 #include <QMediaPlayer>
 #include "sound.h"
+#include "state.h"
 
 class Game : public QGraphicsView
 {
     Q_OBJECT
 private:
     QVector<QGraphicsPixmapItem*> elements;
+    State state;
+    Level level;
+    Sound *bgMusicPlayer;
 public:
-    const int viewWidth = 800, viewHeight = 600;
-    const int playerStartOffset = 100, playerEndOffset = 100;
-    const float groundLevel = 0.88 * viewHeight;
+    // TODO: Make them private and modify that everywhere
     QGraphicsScene* scene;
     Player * player;
     QGraphicsPixmapItem* backgroundItem;
+
+public:
     Game();
     ~Game();
+
+    // Getters
+    float getGroundLevel();
+    int getStartOffset();
+    int getEndOffset();
+    int getSceneWidth();
+    int getSceneHeight();
+
+
+private:
+    // Helpers
     void centerOnPlayer();
-    int lastWidth = 0, lastHeight = 0;
-    Sound *bgMusicPlayer;
-    float getGroundLevel() { return groundLevel; }
     void createMap();
 public slots:
     void moveWithPlayer();

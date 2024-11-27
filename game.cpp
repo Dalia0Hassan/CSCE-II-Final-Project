@@ -2,7 +2,6 @@
 #include "block.h"
 #include "trap.h"
 #include "settingsmanager.h"
-
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QResizeEvent>
@@ -12,35 +11,55 @@
 // SM.value("key") -> value
 Game::Game() {
 
-    setFixedSize(viewWidth, viewHeight);
-    // Set scene width to be 5 times the width of hte view and position it at the beginning of the view
-    // Set a fixed size for the view
+    // Initialize level
+    level = LEVELS[state.getLevel() - 1];
+
+    // View width and height
+    setFixedSize(SM.settings->value("window/width").toInt(), SM.settings->value("window/height").toInt());
+
+    // Scene width, height, and background
     scene = new QGraphicsScene();
-    scene->setBackgroundBrush(QBrush(QPixmap(":/Assets/images/bg_8.jpg").scaled(width(), height())));
-    scene->setSceneRect(0, 0, width() * 5, height());
+    scene->setSceneRect(0, 0, level.getSceneWidth(), level.getSceneHeight());
+
+    scene->setBackgroundBrush(QBrush(QPixmap(level.getBackgroundPath()).scaled(width(), height())));
+
     setScene(scene);
 
 
-    // Create and add the player object to the scene
+    // Player
     player = new Player();
     player->setFlag(QGraphicsItem::ItemIsFocusable);
+
+    // Player and Scene
     scene->addItem(player);
-    player->setPos(width() / 2 - player->boundingRect().height() / 2, groundLevel - player->boundingRect().height());
     player->setFocus();
+
+    // Player coordinates
+
+    player->setPos(getStartOffset(), getGroundLevel() - player->boundingRect().height());
+
+
+    // Connect player position change signal to move with player
     connect(player, &Player::playerPositionChanged, this, &Game::moveWithPlayer);
     moveWithPlayer();
+
+    qDebug() << player->x() << " " << player->y();
 
     // Set scroll policies to hide scrollbars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    // Show the view
     show();
 
+    // Create obstacles
+    createMap();
+
+
     // Add Background Music
-    bgMusicPlayer = new Sound("qrc:/Assets/audio/bg_music_1.mp3", 0.125, QMediaPlayer::Loops::Infinite);
+    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
     bgMusicPlayer->play();
 
-    createMap();
 }
 
 Game::~Game() {
@@ -49,6 +68,25 @@ Game::~Game() {
     delete bgMusicPlayer;
 }
 
+float Game::getGroundLevel() {
+    return level.getGroundLevel();
+}
+
+int Game::getStartOffset() {
+    return level.getStartOffset();
+}
+
+int Game::getEndOffset() {
+    return level.getEndOffset();
+}
+
+int Game::getSceneWidth() {
+    return level.getSceneWidth();
+}
+
+int Game::getSceneHeight() {
+    return level.getSceneHeight();
+}
 
 void Game::moveWithPlayer() {
     // Center the view on the player with boundaries
@@ -66,6 +104,7 @@ void Game::KeyPressEvent(QKeyEvent *event)
 }
 
 
+// TODO: Position them according to ground level
 void Game::createMap() {
     // create traps in all ground
     QString path2 = SM.settings->value("spikes/1").toString();
