@@ -56,7 +56,7 @@ void Player::startLevel() {
         scene()->addItem(shield);
 
     // // enable shield after 1 seconds (Debugging)
-    QTimer::singleShot(1000, this, &Player::enableShield);
+    // QTimer::singleShot(1000, this, &Player::enableShield);
 
 
     // Set the player's initial position and sprite

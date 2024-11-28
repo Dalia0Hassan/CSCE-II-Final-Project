@@ -2,6 +2,7 @@
 #define GAME_H
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include "coinsdisplay.h"
 #include "level.h"
 #include "player.h"
 #include <QMediaPlayer>
@@ -25,6 +26,7 @@ private:
 
     // UI
     QGraphicsPixmapItem *endFlag;
+    CoinsDisplay *coinsDisplayer;
 
 public:
     // TODO: Make them private and modify that everywhere
@@ -55,6 +57,7 @@ private:
     // Helpers
     void createMap();
     void moveWithPlayer();
+    void mapDisplayersToScene();
 
 public slots:
     // Slots

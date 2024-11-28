@@ -47,6 +47,20 @@ void Game::init() {
     // End flag
     endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
     scene->addItem(endFlag);
+
+    // Coins displayer
+    coinsDisplayer = new CoinsDisplay();
+    coinsDisplayer->setPos(
+        SM.settings->value("window/coinsDisplayerXOffset").toInt(),
+        SM.settings->value("window/coinsDisplayerYOffset").toInt()
+        );
+    scene->addItem(coinsDisplayer);
+
+    // Increase coins by 1 every 1 second
+    QTimer * coinTimer = new QTimer(this);
+    connect(coinTimer, &QTimer::timeout, coinsDisplayer, &CoinsDisplay::increment);
+    coinTimer->start(1000);
+
 }
 
 
@@ -127,7 +141,11 @@ void Game::handlePlayerMovement() {
         return;
     }
 
+    // Move view with the player
     moveWithPlayer();
+
+    // Move displayers with the player
+    mapDisplayersToScene();
 }
 
 void Game::KeyPressEvent(QKeyEvent *event)
@@ -176,6 +194,14 @@ void Game::createMap() {
         scene->addItem(block);
     }
 
+}
+
+void Game::mapDisplayersToScene() {
+    QPointF topLeft = mapToScene(
+        SM.settings->value("window/coinsDisplayerXOffset").toInt(),
+        SM.settings->value("window/coinsDisplayerYOffset").toInt()
+        );
+    coinsDisplayer->setPos(topLeft.x(), topLeft.y());
 }
 
 

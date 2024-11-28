@@ -10,7 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     block.cpp \
-    coinscounter.cpp \
+    coinsdisplay.cpp \
     game.cpp \
     level.cpp \
     life.cpp \
@@ -28,7 +28,7 @@ SOURCES += \
 
 HEADERS += \
     block.h \
-    coinscounter.h \
+    coinsdisplay.h \
     game.h \
     level.h \
     life.h \

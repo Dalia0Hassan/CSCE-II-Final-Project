@@ -25,6 +25,11 @@ SettingsManager::SettingsManager() {
     settings->setValue("window/defaultEndOffset", 100);
     settings->setValue("window/width", 800);
     settings->setValue("window/height", 600);
+    settings->setValue("window/coinsDisplayerXOffset", 40);
+    settings->setValue("window/coinsDisplayerYOffset", 0);
+    settings->setValue("window/coinsDisplayerFont", "Times");
+    settings->setValue("window/coinsDisplayerFontSize", 25);
+    settings->setValue("window/coinsDisplayerImage", ":/Assets/images/coin.png");
 
     // Scene
     settings->setValue("scene/defaultHeight", 600);
