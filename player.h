@@ -3,6 +3,7 @@
 
 #include "utils.h"
 #include "shieldeffect.h"
+#include "settingsmanager.h"
 #include "spritesheet.h"
 #include <QGraphicsPixmapItem>
 #include <QObject>
@@ -11,89 +12,56 @@
 #include <QImage>
 #include "sound.h"
 #include <QKeyEvent>
+#include <QDebug>
+#include <QKeyEvent>
+#include <QTime>
 
 class Player : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 private:
-    const int sceneOffset = 100, walkShift = 3, runShift = 5;
-    QSet<int> keysPressed;
-    QSet<PlayerActions> currentActions;
-    PlayerActions dominantAction = IDLE;
-    PlayerDirections direction = RIGHT;
-    float jumpVelocity = -10.75f;
-    float gravity = 0.375f;
+
+    // Constants
+    const int startOffset = SM.settings->value("window/defaultStartOffset").toInt();
+    const int walkShift = SM.settings->value("player/walkSpeed").toInt();
+    const int runShift = SM.settings->value("player/runSpeed").toInt();
+
+    const int walkTimerInterval = SM.settings->value("player/walkTimerInterval").toInt();
+    const int jumpTimerInterval = SM.settings->value("player/jumpTimerInterval").toInt();
+    const int fallTimerInterval = SM.settings->value("player/fallTimerInterval").toInt();
+    const int spriteUpdateInterval = SM.settings->value("player/spriteUpdateInterval").toInt();
+    const int collisionTimerInterval = SM.settings->value("player/collisionTimerInterval").toInt();
+
+    const float jumpVelocity = SM.settings->value("player/jumpSpeed").toFloat();
+    const float gravity = SM.settings->value("player/gravity").toFloat();
+
+    // Variables
     float verticalVelocity = 0.0f;
+    int currentSpriteFrame = 0;
+
+    PlayerDirections direction = RIGHT;
+
+    QSet<int> keysPressed;
+    PlayerActions dominantAction = IDLE;
+
     QVector<SpriteSheet> spriteSheets;
-    int currentSpriteFrame;
+
+    // Flags
     bool isWalking = false;
     bool isRunning = false;
     bool isJumping = false;
     bool isFalling = false;
-    bool isAttacking = false;
     bool isDying = false;
     bool hasShield = false;
 
+    // Timers
     QTimer *spriteTimer = nullptr;
     QTimer *jumpTimer = nullptr;
     QTimer *fallTimer = nullptr;
     QTimer *walkTimer = nullptr;
-    QTimer *attackTimer = nullptr;
     QTimer *collisionTimer = nullptr;
 
-    ShieldEffect * shield = nullptr;
-public:
-    Player();
-    ~Player();
-
-    // void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override {
-    //     // Draw the pixmap
-    //     QGraphicsPixmapItem::paint(painter, option, widget);
-
-    //     // Draw the outline
-    //     painter->setPen(QPen(Qt::red, 3)); // Change color and thickness as needed
-    //     painter->drawRect(boundingRect());
-    // }
-    public slots:
-    void keyPressEvent(QKeyEvent * event) override;
-    void keyReleaseEvent(QKeyEvent * event) override;
-    void focusOutEvent(QFocusEvent * event) override;
-
-
-
-private:
-    void setCurrentSprite();
-    void updateSpriteFrame();
-    void handleWalking();
-    void walk();
-    void stopWalking();
-    void handleJumping();
-    void jump(int = 0);
-    void stopJumping();
-    void handleFalling(int = 0);
-    void fall(int = 0);
-    void stopFalling();
-    void handleAttacking();
-    void attack();
-    void stopAttacking();
-    void handleDying();
-    void die();
-    void stopDying();
-    void handleCollision();
-    void handleCoinCollision(QGraphicsItem*);
-    void handleShieldCollision(QGraphicsItem*);
-    void handlePowerUpCollision(QGraphicsItem*);
-    void handleDangerCollision(QGraphicsItem*);
-
-    void changeDirection(PlayerDirections);
-    QGraphicsItem* validateNewPosition(double = 0, double = 0);
-    double findBestY(double, double, double);
-    void enableShield();
-    void disableShield();
-    void hide();
-    void show();
-    void start();
-
+    // Sounds
     Sound * jumpSound;
     Sound * walkSound;
     Sound * dieSound;
@@ -102,9 +70,77 @@ private:
     Sound * wooHooSound;
     Sound * coinSound;
 
-    void animateAction(PlayerActions, int = 0);
+    // UI
+    ShieldEffect * shield = nullptr;
+
+public:
+    // Constructor and destructor
+    Player();
+    ~Player();
+
+    // Logic
+    void startLevel();
+    void activate();
+    void deactivate();
+
+    // Setters
+    void setDominantAction(PlayerActions action);
+
+private:
+
+    // Logic
+    void init();
+    void updateSpriteFrame();
+
+    // Walking
+    void handleWalking();
+    void walk();
+    void stopWalking();
+
+    // Jumping
+    void handleJumping();
+    void jump(int = 0);
+
+    // Falling
+    void handleFalling(int = 0);
+    void fall(int = 0);
+    void stopFalling();
+
+    // Dying
+    void handleDying();
+    void die();
+    void stopDying();
+
+    // Collision
+    void handleCollision();
+    void handleCoinCollision(QGraphicsItem*);
+    void handleShieldCollision(QGraphicsItem*);
+    void handlePowerUpCollision(QGraphicsItem*);
+    void handleDangerCollision(QGraphicsItem*);
+
+    // Shields
+    void enableShield();
+    void disableShield();
+
+    // Helpers
+    void loadAudioFiles();
+    void loadSpriteSheets();
+    void changeDirection(PlayerDirections);
+    void setCurrentSprite();
+    void hide();
+    void show();
+    double findBestPosition(double, double, double);
+    QGraphicsItem* validateNewPosition(double = 0, double = 0);
+    void moveToStartOver();
+
 signals:
+    // Signals
     void playerPositionChanged();
+
+private slots:
+    // Slots
+    void keyPressEvent(QKeyEvent * event) override;
+    void keyReleaseEvent(QKeyEvent * event) override;
 };
 
 #endif // PLAYER_H

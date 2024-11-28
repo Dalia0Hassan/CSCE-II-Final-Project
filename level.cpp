@@ -1,7 +1,7 @@
 #include "level.h"
 
-Level::Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath, int sceneHeight, int startOffset, int endOffset) {
-    this->levelNumber = levelNumber;
+Level::Level(int number, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath, int sceneHeight, int startOffset, int endOffset) {
+    this->number = number;
     this->sceneWidth = sceneWidth;
     this->groundLevel = groundLevel;
     this->playerLives = playerLives;
@@ -12,12 +12,16 @@ Level::Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives
 }
 
 // Getters
-int Level::getLevelNumber() { return levelNumber; }
+int Level::getNumber() { return number; }
 int Level::getSceneWidth() { return sceneWidth; }
 int Level::getSceneHeight() { return sceneHeight; }
 float Level::getGroundLevel() { return groundLevel * sceneHeight; }
 int Level::getPlayerLives() { return playerLives; }
-int Level::getStartOffset() { return startOffset; }
+int Level::getStartOffset() {
+    qDebug() << "I am here in level::getStartOffset";
+    qDebug() << "I can see that the start offset is: " + QString::number(startOffset);
+    return startOffset;
+}
 int Level::getEndOffset() { return endOffset; }
 QString Level::getBackgroundPath() { return backgroundPath; }
 

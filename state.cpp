@@ -1,6 +1,11 @@
 #include "state.h"
+#include "game.h"
+#include "qdebug.h"
 
-State::State() {}
+State::State() {
+    qDebug() << "From state constructor";
+    qDebug() << (game == nullptr);
+}
 
 // Getters
 int State::getCoins() { return coins; }
@@ -23,6 +28,7 @@ void State::setLives(int lives) {
     emit stateChanged();
 }
 void State::setLevel(int level) {
+    qDebug() << "From set level";
     if (level < 1 || level > 5)
         throw std::invalid_argument("Level must be between 1 and 5");
     this->level = level;
