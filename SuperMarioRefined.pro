@@ -10,10 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     block.cpp \
+    coinscounter.cpp \
     game.cpp \
     level.cpp \
+    life.cpp \
     main.cpp \
     player.cpp \
+    score.cpp \
     settingsmanager.cpp \
     shieldeffect.cpp \
     sound.cpp \
@@ -25,9 +28,12 @@ SOURCES += \
 
 HEADERS += \
     block.h \
+    coinscounter.h \
     game.h \
     level.h \
+    life.h \
     player.h \
+    score.h \
     settingsmanager.h \
     shieldeffect.h \
     sound.h \
