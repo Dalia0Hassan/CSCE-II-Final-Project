@@ -14,6 +14,7 @@ SOURCES += \
     level.cpp \
     main.cpp \
     player.cpp \
+    score.cpp \
     settingsmanager.cpp \
     shieldeffect.cpp \
     sound.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     game.h \
     level.h \
     player.h \
+    score.h \
     settingsmanager.h \
     shieldeffect.h \
     sound.h \
