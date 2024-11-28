@@ -8,6 +8,12 @@ extern Game *game;
 
 ShieldEffect::ShieldEffect(QGraphicsItem *parent)
     : QGraphicsEllipseItem(parent) {
+
+    this->parent = parent;
+
+}
+
+void ShieldEffect::init() {
     // Set the size and position relative to the player
     setRect(-4 * widthOffset, -2 * heightOffset, parent->boundingRect().width() + 8 * widthOffset, parent->boundingRect().height()  + 4 * heightOffset);  // Adjust to match player size
     // Add a radial gradient for a bright effect
@@ -29,7 +35,6 @@ ShieldEffect::ShieldEffect(QGraphicsItem *parent)
     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect();
     blurEffect->setBlurRadius(10);  // Adjust for the desired glow intensity
     setGraphicsEffect(blurEffect);
-
 }
 
 void ShieldEffect::advance(int phase)  {

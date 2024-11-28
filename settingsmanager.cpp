@@ -41,7 +41,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
 
     // Levels (Scene width, ground level, player lives, background path)
-    settings->setValue("levels/1/sceneWidth", 1000);
+    settings->setValue("levels/1/sceneWidth", 3000);
     settings->setValue("levels/1/groundLevel", 0.88);
     settings->setValue("levels/1/playerLives", 5);
     settings->setValue("levels/1/backgroundPath", ":/Assets/images/bg_1.jpg");
@@ -74,12 +74,13 @@ SettingsManager::SettingsManager() {
     settings->setValue("player/spriteContentOffsetY", 45);
     settings->setValue("player/spriteContentWidth", 38);
     settings->setValue("player/spriteContentHeight", 83);
-    settings->setValue("player/spriteUpdateInterval", 75);
-    settings->setValue("player/spriteTimerInterval", 75);
     settings->setValue("player/walkTimerInterval", 16);
     settings->setValue("player/jumpTimerInterval", 16);
     settings->setValue("player/fallTimerInterval", 16);
     settings->setValue("player/collisionTimerInterval", 16);
+
+    // Sprites
+    settings->setValue("spriteUpdateInterval", 75);
 }
 
 SettingsManager::~SettingsManager() {
