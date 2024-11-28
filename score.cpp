@@ -7,7 +7,7 @@ Score::Score(QGraphicsItem *parent): QGraphicsTextItem(parent) {
     scoreCount = 0;
 
     // Add the image to represent "Score:"
-    QGraphicsPixmapItem* scoreImage = new QGraphicsPixmapItem(QPixmap(":/images/scoretext.png"));
+    QGraphicsPixmapItem* scoreImage = new QGraphicsPixmapItem(QPixmap(":/Assets/images/scoretext.png"));
     scoreImage->setParentItem(this); // Attach it as a child (to keep them grouped)
     scoreImage->setPos(-50, -5);     // Position the image relative to the score text
 

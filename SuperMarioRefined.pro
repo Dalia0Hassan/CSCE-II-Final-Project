@@ -12,6 +12,7 @@ SOURCES += \
     block.cpp \
     game.cpp \
     level.cpp \
+    life.cpp \
     main.cpp \
     player.cpp \
     score.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     block.h \
     game.h \
     level.h \
+    life.h \
     player.h \
     score.h \
     settingsmanager.h \
