@@ -5,7 +5,6 @@ const QVector<QString> PLAYER_ACTIONS = {
     "walk",
     "run",
     "jump",
-    "shield",
     "die",
 };
 

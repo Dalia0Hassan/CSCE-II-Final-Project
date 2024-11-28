@@ -11,7 +11,6 @@ enum PlayerActions {
     WALK,
     RUN,
     JUMP,
-    SHIELD,
     DIE,
 };
 
@@ -26,6 +25,11 @@ enum CustomTypes {
     ShieldType,
     CoinType,
     PowerUpType
+};
+
+enum AnimationType {
+    oneTime,
+    repeating
 };
 
 extern const QVector<QString> PLAYER_ACTIONS;

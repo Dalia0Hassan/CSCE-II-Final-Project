@@ -9,9 +9,11 @@ class ShieldEffect : public QGraphicsEllipseItem
 private:
     const int widthOffset = 10, heightOffset = 10;
     QRadialGradient gradient;
+    QGraphicsItem *parent;
 public:
     ShieldEffect(QGraphicsItem *parent);
     ~ShieldEffect();
+    void init();
     void advance(int phase);
 };
 

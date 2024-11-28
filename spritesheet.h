@@ -1,15 +1,17 @@
 #ifndef SPRITESHEET_H
 #define SPRITESHEET_H
 
+#include "qgraphicsitem.h"
+#include "utils.h"
 #include <QPixmap>
 #include <QString>
 
-class SpriteSheet
+class SpriteSheet : public QObject, public QGraphicsPixmapItem
 {
+    Q_OBJECT
 private:
     // Name for sprite sheet
     QString name;
-
 
     // Number of frames in the sheet (Calculated in the constructor)
     int frameCount;
@@ -25,12 +27,24 @@ private:
     // Width and height of the content in the sprite
     int contentWidth;
     int contentHeight;
-public:
-    // Pixmap for sprite sheet
-    QPixmap pixmap;
+
+    // Original pixmap
+    QPixmap originalPixmap;
+
+    // Animation
+    QTimer *animationTimer = nullptr;
+    int currentSpriteFrame = 0;
 
 public:
-    SpriteSheet(QString name, QString path, int frameWidth, int frameHeight, int xOffset, int yOffset, int contentWidth, int contentHeight);
+
+public:
+    SpriteSheet(QString name = "");
+    ~SpriteSheet();
+
+    // Logic
+    void setProperties(int frameWidth, int frameHeight, int xOffset, int yOffset, int contentWidth, int contentHeight);
+    void setSpritePixmap(QPixmap pixmap);
+    void animateSprite(AnimationType = repeating);
 
     // Getters
     QString getName();
@@ -41,6 +55,11 @@ public:
     int getContentOffsetY();
     int getContentWidth();
     int getContentHeight();
+
+
+private:
+    // Helper
+    void advanceFrames(AnimationType);
 
 };
 
