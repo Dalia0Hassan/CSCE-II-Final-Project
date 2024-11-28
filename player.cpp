@@ -15,10 +15,17 @@ void Player::init() {
     loadAudioFiles();
 
     // Loading sprite sheets
-    loadSpriteSheets();
+    loadSpriteSheetImages();
 
-    // Set the player's initial appearance
-    updateSpriteFrame();
+    // Set sprite sheet properties
+    setProperties(
+        SM.settings->value("player/spriteFrameWidth").toInt(),
+        SM.settings->value("player/spriteFrameHeight").toInt(),
+        SM.settings->value("player/spriteContentOffsetX").toInt(),
+        SM.settings->value("player/spriteContentOffsetY").toInt(),
+        SM.settings->value("player/spriteContentWidth").toInt(),
+        SM.settings->value("player/spriteContentHeight").toInt()
+    );
 
     // Walk timer
     walkTimer = new QTimer(this);
@@ -28,10 +35,6 @@ void Player::init() {
     jumpTimer = new QTimer(this);
     fallTimer = new QTimer(this);
 
-    // Sprite timer
-    spriteTimer = new QTimer(this);
-    connect(spriteTimer, &QTimer::timeout, this, &Player::updateSpriteFrame);
-
     // Collision Timer
     collisionTimer = new QTimer(this);
     connect(collisionTimer, &QTimer::timeout, this, &Player::handleCollision);
@@ -40,26 +43,32 @@ void Player::init() {
     shield = new ShieldEffect(this);
     shield->setOpacity(0);
 
-
 }
 
 void Player::startLevel() {
 
-    activate();
 
-    // Start timers
-    spriteTimer->start(spriteUpdateInterval);
+    // // Start timers
     collisionTimer->start(collisionTimerInterval);
 
-    // Add the shield if not there
+    // // Add the shield if not there
     if (!scene()->items().contains(shield))
         scene()->addItem(shield);
 
-    // enable shield after 1 seconds (Debugging)
+    // // enable shield after 1 seconds (Debugging)
     QTimer::singleShot(1000, this, &Player::enableShield);
 
-    // Set the player's initial position
+
+    // Set the player's initial position and sprite
+    setSpritePixmap(spriteSheetImages[dominantAction]);
+    animateSprite();
     setPos(game->getStartOffset(), game->getGroundLevel() - boundingRect().height());
+
+    // Shield
+    shield->init();
+
+    // Activate Player
+    activate();
 
 }
 
@@ -90,30 +99,6 @@ void Player::deactivate() {
 
     // Deactivate shield
     disableShield();
-}
-
-void Player::updateSpriteFrame() {
-
-    // If it is a repeating action, loop the animation
-    if (dominantAction == PlayerActions::WALK || dominantAction == PlayerActions::RUN || dominantAction == PlayerActions::IDLE)
-        currentSpriteFrame = (currentSpriteFrame + 1) % spriteSheets[dominantAction].getFrameCount();
-
-    // If it is a one-time action, progress the animation once
-    else if (dominantAction == PlayerActions::JUMP || dominantAction == PlayerActions::DIE) {
-        // If the animation is not done, progress
-        if (currentSpriteFrame < spriteSheets[dominantAction].getFrameCount() - 1)
-            currentSpriteFrame++;
-    }
-
-    // Set the new sprite frame
-    setPixmap(
-        spriteSheets[dominantAction].pixmap.copy(
-            currentSpriteFrame * spriteSheets[dominantAction].getFrameWidth() + spriteSheets[dominantAction].getContentOffsetX(),
-            spriteSheets[dominantAction].getContentOffsetY(),
-            spriteSheets[dominantAction].getContentWidth(),
-            spriteSheets[dominantAction].getContentHeight()
-            )
-        );
 }
 
 // Walking
@@ -390,9 +375,6 @@ void Player::die() {
     // Stop the dying after 225ms
     QTimer::singleShot(225, this, &Player::stopDying);
 
-    // Update the sprite sheet
-    setCurrentSprite();
-
 }
 
 void Player::stopDying() {
@@ -402,6 +384,9 @@ void Player::stopDying() {
 
     // Restart level after 1000 second
     QTimer::singleShot(1000, this, &Player::moveToStartOver);
+
+    // Update the sprite sheet
+    setCurrentSprite();
 
 }
 
@@ -465,19 +450,13 @@ void Player::loadAudioFiles() {
     wooHooSound = new Sound(SM.settings->value("audio/wooHooSound").toString());
 }
 
-void Player::loadSpriteSheets() {
+void Player::loadSpriteSheetImages() {
     for(int i = 0; i < PLAYER_ACTIONS.size(); i++) {
         QString filename = PLAYER_ACTIONS[i];
         filename[0] = filename[0].toUpper();
         QString path = QString(":/Assets/images/Fighter/%1.png").arg(filename);
-        spriteSheets.push_back(SpriteSheet(
-            PLAYER_ACTIONS[i], path,
-            SM.settings->value("player/spriteFrameWidth").toInt(),
-            SM.settings->value("player/spriteFrameHeight").toInt(),
-            SM.settings->value("player/spriteContentOffsetX").toInt(),
-            SM.settings->value("player/spriteContentOffsetY").toInt(),
-            SM.settings->value("player/spriteContentWidth").toInt(),
-            SM.settings->value("player/spriteContentHeight").toInt()));
+        QPixmap pixmap(path);
+        spriteSheetImages.push_back(pixmap);
     }
 }
 
@@ -492,8 +471,10 @@ void Player::setCurrentSprite() {
     else
         newDominantAction = IDLE;
 
-    if (newDominantAction != dominantAction)
-        currentSpriteFrame = 0;
+    if (newDominantAction != dominantAction) {
+        setSpritePixmap(spriteSheetImages[newDominantAction]);
+        animateSprite(newDominantAction == JUMP ? oneTime : repeating);
+    }
 
     dominantAction = newDominantAction;
 }
@@ -653,7 +634,6 @@ Player::~Player() {
     delete jumpSound;
     delete walkSound;
     delete dieSound;
-    delete spriteTimer;
     delete jumpTimer;
     delete walkTimer;
     delete fallTimer;

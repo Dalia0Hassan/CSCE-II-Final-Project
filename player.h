@@ -16,11 +16,10 @@
 #include <QKeyEvent>
 #include <QTime>
 
-class Player : public QObject, public QGraphicsPixmapItem
+class Player : public SpriteSheet
 {
-    Q_OBJECT
 private:
-
+    Q_OBJECT
     // Constants
     const int startOffset = SM.settings->value("window/defaultStartOffset").toInt();
     const int walkShift = SM.settings->value("player/walkSpeed").toInt();
@@ -29,7 +28,6 @@ private:
     const int walkTimerInterval = SM.settings->value("player/walkTimerInterval").toInt();
     const int jumpTimerInterval = SM.settings->value("player/jumpTimerInterval").toInt();
     const int fallTimerInterval = SM.settings->value("player/fallTimerInterval").toInt();
-    const int spriteUpdateInterval = SM.settings->value("player/spriteUpdateInterval").toInt();
     const int collisionTimerInterval = SM.settings->value("player/collisionTimerInterval").toInt();
 
     const float jumpVelocity = SM.settings->value("player/jumpSpeed").toFloat();
@@ -37,14 +35,13 @@ private:
 
     // Variables
     float verticalVelocity = 0.0f;
-    int currentSpriteFrame = 0;
 
     PlayerDirections direction = RIGHT;
 
     QSet<int> keysPressed;
     PlayerActions dominantAction = IDLE;
 
-    QVector<SpriteSheet> spriteSheets;
+    QVector<QPixmap> spriteSheetImages;
 
     // Flags
     bool isWalking = false;
@@ -55,7 +52,6 @@ private:
     bool hasShield = false;
 
     // Timers
-    QTimer *spriteTimer = nullptr;
     QTimer *jumpTimer = nullptr;
     QTimer *fallTimer = nullptr;
     QTimer *walkTimer = nullptr;
@@ -90,7 +86,6 @@ private:
 
     // Logic
     void init();
-    void updateSpriteFrame();
 
     // Walking
     void handleWalking();
@@ -124,7 +119,7 @@ private:
 
     // Helpers
     void loadAudioFiles();
-    void loadSpriteSheets();
+    void loadSpriteSheetImages();
     void changeDirection(PlayerDirections);
     void setCurrentSprite();
     void hide();
