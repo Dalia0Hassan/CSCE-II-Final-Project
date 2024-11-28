@@ -12,11 +12,7 @@ enum PlayerActions {
     RUN,
     JUMP,
     SHIELD,
-    SHOT_1,
     DIE,
-    ATTACK_1,
-    ATTACK_2,
-    ATTACK_3
 };
 
 enum PlayerDirections {

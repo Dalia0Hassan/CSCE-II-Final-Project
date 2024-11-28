@@ -6,9 +6,18 @@ SettingsManager::SettingsManager() {
     settings = new QSettings();
 
     // Audio
-    settings->setValue("audio/jump" , "qrc:/Assets/audio/man_jumps_1.wav");
-    settings->setValue("audio/walk" , "qrc:/Assets/audio/man_walks.wav");
+    settings->setValue("audio/jumpSound" , "qrc:/Assets/audio/man_jumps_1.wav");
+    settings->setValue("audio/walkSound" , "qrc:/Assets/audio/man_walks.wav");
+    settings->setValue("audio/dieSound" , "qrc:/Assets/audio/male_death_sound.mp3");
+    settings->setValue("audio/destroySound" , "qrc:/Assets/audio/shield_hit.m4a");
+    settings->setValue("audio/shieldActivationSound" , "qrc:/Assets/audio/shield_active.mp3");
+    settings->setValue("audio/wooHooSound" , "qrc:/Assets/audio/woo_hoo.mp3");
+    settings->setValue("audio/coinSound" , "qrc:/Assets/audio/coin_pickup.mp3");
+
     settings->setValue("audio/bg/music", "qrc:/Assets/audio/bg_music_1.mp3");
+    settings->setValue("audio/victorySound", "qrc:/Assets/audio/victory_sound.mp3");
+    settings->setValue("audio/levelWinSound", "qrc:/Assets/audio/level_win_sound.mp3");
+
     settings->setValue("audio/volume", .125);
 
     // View
@@ -19,6 +28,7 @@ SettingsManager::SettingsManager() {
 
     // Scene
     settings->setValue("scene/defaultHeight", 600);
+    settings->setValue("scene/endFlag", ":/Assets/images/end_flag.png");
 
     // Images
     settings->setValue("spikes/1", ":/Assets/images/Spikes/1.png");
@@ -31,7 +41,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/6", ":/Assets/images/Blocks/6.png");
 
     // Levels (Scene width, ground level, player lives, background path)
-    settings->setValue("levels/1/sceneWidth", 3000);
+    settings->setValue("levels/1/sceneWidth", 1000);
     settings->setValue("levels/1/groundLevel", 0.88);
     settings->setValue("levels/1/playerLives", 5);
     settings->setValue("levels/1/backgroundPath", ":/Assets/images/bg_1.jpg");
@@ -84,8 +94,6 @@ SettingsManager::SettingsManager() {
     settings->setValue("audio/coinPickUp/1", "qrc:/Assets/audio/capture_coin.mp3");
     settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
     settings->setValue("audio/coinPickUp/3" , "qrc:/Assets/audio/coin_pickup_2.mp3");
-
-
 
 }
 

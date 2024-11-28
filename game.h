@@ -12,17 +12,29 @@ class Game : public QGraphicsView
 {
     Q_OBJECT
 private:
+
+    // Trackers
     QVector<QGraphicsPixmapItem*> elements;
-    State state;
-    Level level;
+    State *state = nullptr;
+    Level *level = nullptr;
+
+    // Sounds
+    Sound *victorySound, *levelWinSound;
     Sound *bgMusicPlayer;
-public:
-    // TODO: Make them private and modify that everywhere
-    QGraphicsScene* scene;
-    Player * player;
-    QGraphicsPixmapItem* backgroundItem;
+
+
+    // UI
+    QGraphicsPixmapItem *endFlag;
 
 public:
+    // TODO: Make them private and modify that everywhere
+    QGraphicsScene* scene = nullptr;
+    Player * player = nullptr;
+
+
+public:
+
+    // Constructor and destructor
     Game();
     ~Game();
 
@@ -35,12 +47,24 @@ public:
 
 
 private:
+    // Logic
+    void init();
+    void startCurrentLevel();
+    void handleNewLevel();
+
     // Helpers
-    void centerOnPlayer();
     void createMap();
-public slots:
     void moveWithPlayer();
+
+public slots:
+    // Slots
+    void handlePlayerMovement();
     void KeyPressEvent(QKeyEvent *event);
+
+    // Friends
+    friend int main(int argc, char *argv[]);
 };
+
+extern Game *game;
 
 #endif // GAME_H
