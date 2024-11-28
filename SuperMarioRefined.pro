@@ -20,7 +20,8 @@ SOURCES += \
     spritesheet.cpp \
     state.cpp \
     trap.cpp \
-    utils.cpp
+    utils.cpp \
+    # coin.cpp
 
 HEADERS += \
     block.h \
@@ -33,7 +34,8 @@ HEADERS += \
     spritesheet.h \
     state.h \
     trap.h \
-    utils.h
+    utils.h \
+    # coin.h
 
 FORMS +=
 
