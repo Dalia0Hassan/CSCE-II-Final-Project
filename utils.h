@@ -4,6 +4,7 @@
 #include <QString>
 #include <QVector>
 #include <QGraphicsItem>
+#include <random>
 
 enum PlayerActions {
     IDLE,
@@ -33,4 +34,5 @@ enum AnimationType {
 
 extern const QVector<QString> PLAYER_ACTIONS;
 
+int RandomNumber(int min, int max) ;
 #endif // UTILS_H
