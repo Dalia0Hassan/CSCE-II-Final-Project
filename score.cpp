@@ -8,14 +8,14 @@ Score::Score(QGraphicsItem *parent): QGraphicsTextItem(parent) {
 
     // Add the image to represent "Score:"
     QGraphicsPixmapItem* scoreImage = new QGraphicsPixmapItem(QPixmap(":/Assets/images/scoretext.png"));
-    scoreImage->setParentItem(this); // Attach it as a child (to keep them grouped)
-    scoreImage->setPos(-50, -5);     // Position the image relative to the score text
+    scoreImage->setParentItem(this); // Attach it as a child *parent is score* (to keep them grouped) this makes its postion "relative" to the score text
+    scoreImage->setPos(-50, -5);     // Position the image relative to the score value
 
     // Set the initial score display
     setPlainText(QString::number(scoreCount));
     setDefaultTextColor(Qt::black);// set color
     setFont(QFont("Impact", 30));  // set font
-    setPos(50, 0);                  // Adjust the position of the text to align with the image
+    setPos(50, 0); // set the position of the score value
 
 }
 
