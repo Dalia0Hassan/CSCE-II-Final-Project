@@ -29,8 +29,6 @@ void SpriteSheet::setSpritePixmap(QPixmap pix) {
 
     frameCount = pix.width() / frameWidth;
 
-    qDebug() << "Frame count:" << frameCount;
-
 }
 
 void SpriteSheet::animateSprite(AnimationType type) {
