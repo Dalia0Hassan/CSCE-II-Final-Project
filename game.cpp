@@ -7,102 +7,148 @@
 #include <QResizeEvent>
 
 
-// TODO: use settings manager instead of hardcoding values
-// SM.value("key") -> value
 Game::Game() {
 
-    // Initialize level
-    level = LEVELS[state.getLevel() - 1];
+    // Initialize game
+    init();
+
+}
+
+
+// Logic
+void Game::init() {
+
+
+    // Initialize state and level
+    state = new State();
+
+    // Initialize Scene
+    scene = new QGraphicsScene();
+    setScene(scene);
 
     // View width and height
     setFixedSize(SM.settings->value("window/width").toInt(), SM.settings->value("window/height").toInt());
 
-    // Scene width, height, and background
-    scene = new QGraphicsScene();
-    scene->setSceneRect(0, 0, level.getSceneWidth(), level.getSceneHeight());
+    // Ensuring view can receive focus
+    setFocusPolicy(Qt::StrongFocus);
 
-    scene->setBackgroundBrush(QBrush(QPixmap(level.getBackgroundPath()).scaled(width(), height())));
-
-    setScene(scene);
-
-
-    // Player
+    // Initialize Player
     player = new Player();
-    player->setFlag(QGraphicsItem::ItemIsFocusable);
+    scene->addItem(player);
+    connect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
+
+    // Background music
+    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
+
+    // Victory sound
+    victorySound = new Sound(SM.settings->value("audio/victorySound").toString());
+    levelWinSound = new Sound(SM.settings->value("audio/levelWinSound").toString());
+
+    // End flag
+    endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
+    scene->addItem(endFlag);
+}
+
+
+void Game::startCurrentLevel() {
+
+    // Initialize level
+    if (level != nullptr)
+        delete level;
+
+    level = new Level(LEVELS[state->getLevel() - 1]);
+
+    // Scene width, height, and background
+    scene->setSceneRect(0, 0, level->getSceneWidth(), level->getSceneHeight());
+    scene->setBackgroundBrush(QBrush(QPixmap(level->getBackgroundPath()).scaled(width(), height())));
 
     // Player and Scene
-    scene->addItem(player);
+    player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
+    player->startLevel();
 
-    // Player coordinates
-
-    player->setPos(getStartOffset(), getGroundLevel() - player->boundingRect().height());
-
-
-    // Connect player position change signal to move with player
-    connect(player, &Player::playerPositionChanged, this, &Game::moveWithPlayer);
+    // Move with player
+    // Disconnect from the playerPositionChanged signal and connect again
+    disconnect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
+    connect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
     moveWithPlayer();
-
-    qDebug() << player->x() << " " << player->y();
 
     // Set scroll policies to hide scrollbars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    // Show the view
-    show();
-
     // Create obstacles
     createMap();
 
-
-    // Add Background Music
-    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
+    // Play Background Music
     bgMusicPlayer->play();
 
+    // End flag position
+    endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
+
 }
 
-Game::~Game() {
-    delete scene;
-    delete player;
-    delete bgMusicPlayer;
+
+void Game::handleNewLevel() {
+
+    // Stop player movement
+    player->clearFocus();
+    player->setFlag(QGraphicsItem::ItemIsFocusable, false);
+
+    // Give Player IDLE state
+    player->deactivate();
+
+    // Stop the background music
+    bgMusicPlayer->stop();
+
+    // Play the win sound
+    levelWinSound->play();
+
+    // play "victory" sound after 500 ms
+    QTimer::singleShot(1000, [=](){
+        victorySound->play();
+        if (state->getLevel() != LEVELS.size()) {
+            state->setLevel(state->getLevel() + 1);
+            startCurrentLevel();
+        } else
+            state->setIsGameOver(true);
+    });
+
 }
 
-float Game::getGroundLevel() {
-    return level.getGroundLevel();
-}
+// Slots
+void Game::handlePlayerMovement() {
 
-int Game::getStartOffset() {
-    return level.getStartOffset();
-}
+    if (player->x() >= scene->width() - getEndOffset() - player->boundingRect().width()) {
+        // Handle the transition to a new level
+        handleNewLevel();
+        // Disconnect player position change signal
+        disconnect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
+        return;
+    }
 
-int Game::getEndOffset() {
-    return level.getEndOffset();
-}
-
-int Game::getSceneWidth() {
-    return level.getSceneWidth();
-}
-
-int Game::getSceneHeight() {
-    return level.getSceneHeight();
-}
-
-void Game::moveWithPlayer() {
-    // Center the view on the player with boundaries
-    qreal x = qBound(viewport()->width() / 2.0, player->x(), scene->width() - viewport()->width() / 2.0);
-    qreal y = qBound(viewport()->height() / 2.0, player->y(), scene->height() - viewport()->height() / 2.0);
-
-    centerOn(x, y);
+    moveWithPlayer();
 }
 
 void Game::KeyPressEvent(QKeyEvent *event)
 {
     // Prevent moving the view if it has focus
-    if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left)
+    if (event->key() == Qt::Key_Right || event->key() == Qt::Key_Left) {
+        event->accept();
         return;
+    }
+
+    QGraphicsView::keyPressEvent(event);
 }
 
+// Helpers
+void Game::moveWithPlayer() {
+
+    // Center the view on the player with boundaries
+    qreal x = qBound(viewport()->width() / 2.0, player->x(), scene->width() - viewport()->width() / 2.0);
+    centerOn(x, viewport()->height() / 2.0);
+
+}
 
 // TODO: Position them according to ground level
 void Game::createMap() {
@@ -130,4 +176,37 @@ void Game::createMap() {
         scene->addItem(block);
     }
 
+}
+
+
+// Getters
+float Game::getGroundLevel() {
+    return level->getGroundLevel();
+}
+
+int Game::getStartOffset() {
+    return level->getStartOffset();
+}
+
+int Game::getEndOffset() {
+    return level->getEndOffset();
+}
+
+int Game::getSceneWidth() {
+    return level->getSceneWidth();
+}
+
+int Game::getSceneHeight() {
+    return level->getSceneHeight();
+}
+
+// Destructor
+Game::~Game() {
+    delete scene;
+    delete player;
+    delete bgMusicPlayer;
+    delete victorySound;
+    delete levelWinSound;
+    delete state;
+    delete endFlag;
 }

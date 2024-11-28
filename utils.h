@@ -4,18 +4,14 @@
 #include <QString>
 #include <QVector>
 #include <QGraphicsItem>
+#include <random>
 
 enum PlayerActions {
     IDLE,
     WALK,
     RUN,
     JUMP,
-    SHIELD,
-    SHOT_1,
     DIE,
-    ATTACK_1,
-    ATTACK_2,
-    ATTACK_3
 };
 
 enum PlayerDirections {
@@ -31,6 +27,12 @@ enum CustomTypes {
     PowerUpType
 };
 
+enum AnimationType {
+    oneTime,
+    repeating
+};
+
 extern const QVector<QString> PLAYER_ACTIONS;
 
+int RandomNumber(int min, int max) ;
 #endif // UTILS_H

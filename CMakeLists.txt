@@ -19,21 +19,44 @@ find_package(Qt6 COMPONENTS Core Gui Widgets Multimedia REQUIRED)
 add_executable(CSCE_II_Final_Project
         game.cpp
         game.h
+
         main.cpp
+
         player.cpp
         player.h
-        playerAction.cpp
-        playerAction.h
+
         sound.cpp
         sound.h
+
         spritesheet.cpp
         spritesheet.h
+
         resources.qrc
+
         settingsmanager.cpp
+        settingsmanager.h
+
         block.h
         block.cpp
+
         trap.h
         trap.cpp
+
+        state.cpp
+        state.h
+
+        level.h
+        level.cpp
+
+        shieldeffect.cpp
+        shieldeffect.h
+
+        utils.cpp
+        utils.h
+
+        coin.cpp
+        coin.h
+
 )
 
 # Link the Qt libraries to the target

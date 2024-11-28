@@ -9,7 +9,7 @@ extern SettingsManager SM;
 class Level
 {
 private:
-    int levelNumber;
+    int number;
     int sceneWidth;
     int sceneHeight;
     float groundLevel;
@@ -20,13 +20,13 @@ private:
 
 public:
     Level() {};
-    Level(int levelNumber, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath,
+    Level(int number, int sceneWidth, float groundLevel, int playerLives, QString backgroundPath,
         int sceneHeight = SM.settings->value("scene/defaultHeight").toInt(),
         int startOffset = SM.settings->value("window/defaultStartOffset").toInt(),
         int endOffset = SM.settings->value("window/defaultEndOffset").toInt());
 
     // Getters
-    int getLevelNumber();
+    int getNumber();
     int getSceneWidth();
     int getSceneHeight();
     float getGroundLevel();

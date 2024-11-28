@@ -6,9 +6,18 @@ SettingsManager::SettingsManager() {
     settings = new QSettings();
 
     // Audio
-    settings->setValue("audio/jump" , "qrc:/Assets/audio/man_jumps_1.wav");
-    settings->setValue("audio/walk" , "qrc:/Assets/audio/man_walks.wav");
+    settings->setValue("audio/jumpSound" , "qrc:/Assets/audio/man_jumps_1.wav");
+    settings->setValue("audio/walkSound" , "qrc:/Assets/audio/man_walks.wav");
+    settings->setValue("audio/dieSound" , "qrc:/Assets/audio/male_death_sound.mp3");
+    settings->setValue("audio/destroySound" , "qrc:/Assets/audio/shield_hit.m4a");
+    settings->setValue("audio/shieldActivationSound" , "qrc:/Assets/audio/shield_active.mp3");
+    settings->setValue("audio/wooHooSound" , "qrc:/Assets/audio/woo_hoo.mp3");
+    settings->setValue("audio/coinSound" , "qrc:/Assets/audio/coin_pickup.mp3");
+
     settings->setValue("audio/bg/music", "qrc:/Assets/audio/bg_music_1.mp3");
+    settings->setValue("audio/victorySound", "qrc:/Assets/audio/victory_sound.mp3");
+    settings->setValue("audio/levelWinSound", "qrc:/Assets/audio/level_win_sound.mp3");
+
     settings->setValue("audio/volume", .125);
 
     // View
@@ -19,6 +28,7 @@ SettingsManager::SettingsManager() {
 
     // Scene
     settings->setValue("scene/defaultHeight", 600);
+    settings->setValue("scene/endFlag", ":/Assets/images/end_flag.png");
 
     // Images
     settings->setValue("spikes/1", ":/Assets/images/Spikes/1.png");
@@ -64,13 +74,25 @@ SettingsManager::SettingsManager() {
     settings->setValue("player/spriteContentOffsetY", 45);
     settings->setValue("player/spriteContentWidth", 38);
     settings->setValue("player/spriteContentHeight", 83);
-    settings->setValue("player/spriteUpdateInterval", 75);
-    settings->setValue("player/spriteTimerInterval", 75);
     settings->setValue("player/walkTimerInterval", 16);
     settings->setValue("player/jumpTimerInterval", 16);
     settings->setValue("player/fallTimerInterval", 16);
     settings->setValue("player/collisionTimerInterval", 16);
-    settings->setValue("player/attackTimerInterval", 16);
+  
+    // Coin
+    settings->setValue("coin/spriteSheet/1", ":/Assets/images/coin1.png");
+    settings->setValue("coin/spriteSheet/2", ":/Assets/images/coin2.png");
+    settings->setValue("coin/spriteWidth", 180);
+    settings->setValue("coin/spriteHeight", 20);
+
+    settings->setValue("coin/volume", 0.125);
+    settings->setValue("audio/coinPickUp/1", "qrc:/Assets/audio/capture_coin.mp3");
+    settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
+    settings->setValue("audio/coinPickUp/3" , "qrc:/Assets/audio/coin_pickup_2.mp3");
+
+
+    // Sprites
+    settings->setValue("spriteUpdateInterval", 75);
 }
 
 SettingsManager::~SettingsManager() {
