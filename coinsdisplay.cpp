@@ -44,13 +44,22 @@ void CoinsDisplay::set(int newValue){
     value = newValue;
     updateText();
 }
+void CoinsDisplay::increase(int val )  {
+    set( value + val);
+}
+
+void CoinsDisplay::decrease(int val ) {
+    if ( value - val < 0)
+        throw "Coins cannot be negative";
+    set( value - val);
+}
 
 void CoinsDisplay::increment() {
-    set(value + 1);
+    increase(1);
 }
 
 void CoinsDisplay::decrement() {
-    set(value - 1);
+    decrease(1);
 }
 
 // Helpers
