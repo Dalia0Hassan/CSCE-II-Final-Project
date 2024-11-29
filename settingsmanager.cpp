@@ -91,7 +91,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("coin/spriteHeight", 20);
 
     settings->setValue("coin/volume", 0.2);
-    settings->setValue("audio/coinPickUp/1", "qrc:/Assets/audio/capture_coin.mp3");
+    settings->setValue("audio/coinPickUp/1", "qrc:/Assets/audio/capture_coin.wav");
     settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
     settings->setValue("audio/coinPickUp/3" , "qrc:/Assets/audio/coin_pickup_2.mp3");
 
