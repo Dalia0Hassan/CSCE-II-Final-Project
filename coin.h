@@ -8,9 +8,10 @@
 #include "settingsmanager.h"
 #include "sound.h"
 #include "utils.h"
+#include "spritesheet.h"
 
 
-class  Coin :  public QObject, public QGraphicsPixmapItem
+class  Coin :  public SpriteSheet
 {
 Q_OBJECT
 private:
@@ -23,7 +24,7 @@ private:
     void setRandomSound();
 
 public:
-    Coin( qreal x , qreal y , qreal scale , qreal value);
+    Coin( qreal x , qreal y , qreal scale , qreal value, QString spriteSheetPath);
     qreal getValue() const;
     ~Coin() override;
 

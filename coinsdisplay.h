@@ -12,6 +12,8 @@ public:
 
     // Setters
     void set(int);
+    void increase(int);
+    void decrease(int);
     void increment();
     void decrement();
 
