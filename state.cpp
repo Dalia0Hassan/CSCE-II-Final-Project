@@ -1,6 +1,5 @@
 #include "state.h"
 #include "game.h"
-#include "qdebug.h"
 
 State::State() {
     qDebug() << "From state constructor";
