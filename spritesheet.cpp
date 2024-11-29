@@ -22,13 +22,7 @@ void SpriteSheet::setProperties(int frameWidth, int frameHeight, int xOffset, in
 
 void SpriteSheet::setSpritePixmap(QPixmap pix) {
     originalPixmap = pix;
-
-    qDebug() << "sent:" << pix.width() << pix.height();
-    qDebug() << "original:" << originalPixmap.width() << originalPixmap.height();
-    qDebug() << "Porperties:" << frameWidth;
-
     frameCount = pix.width() / frameWidth;
-
 }
 
 void SpriteSheet::animateSprite(AnimationType type) {
