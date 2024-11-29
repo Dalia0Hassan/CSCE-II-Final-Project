@@ -2,6 +2,7 @@
 #define GAME_H
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include "coinsdisplay.h"
 #include "level.h"
 #include "player.h"
 #include <QMediaPlayer>
@@ -17,7 +18,6 @@ private:
     QVector<QGraphicsPixmapItem*> elements;
     State *state = nullptr;
     Level *level = nullptr;
-
     // Sounds
     Sound *victorySound, *levelWinSound;
     Sound *bgMusicPlayer;
@@ -28,6 +28,7 @@ private:
 
 public:
     // TODO: Make them private and modify that everywhere
+    CoinsDisplay *coinsDisplayer; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
 
@@ -55,6 +56,7 @@ private:
     // Helpers
     void createMap();
     void moveWithPlayer();
+    void mapDisplayersToScene();
 
 public slots:
     // Slots

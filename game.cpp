@@ -5,6 +5,11 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <QTimer>
+#include <QKeyEvent>
+#include <QBrush>
+#include <QGraphicsView>
+#include "coin.h"
 
 
 Game::Game() {
@@ -47,6 +52,15 @@ void Game::init() {
     // End flag
     endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
     scene->addItem(endFlag);
+
+    // Coins displayer
+    coinsDisplayer = new CoinsDisplay();
+    coinsDisplayer->setPos(
+        SM.settings->value("window/coinsDisplayerXOffset").toInt(),
+        SM.settings->value("window/coinsDisplayerYOffset").toInt()
+        );
+    scene->addItem(coinsDisplayer);
+
 }
 
 
@@ -127,7 +141,11 @@ void Game::handlePlayerMovement() {
         return;
     }
 
+    // Move view with the player
     moveWithPlayer();
+
+    // Move displayers with the player
+    mapDisplayersToScene();
 }
 
 void Game::KeyPressEvent(QKeyEvent *event)
@@ -153,6 +171,19 @@ void Game::moveWithPlayer() {
 // TODO: Position them according to ground level
 void Game::createMap() {
     // create traps in all ground
+
+
+    // Create coins
+    QString path = SM.settings->value("coin/spriteSheet/1").toString();
+
+    // Create pixmap
+    for ( int i = 0 ; i < 40 ; i++){
+        Coin *coin = new Coin(800+ i*200, this->getGroundLevel() -200 , 2 , 1 , path);
+        elements.push_back(coin);
+        scene->addItem(coin);
+    }
+
+
     QString path2 = SM.settings->value("spikes/1").toString();
     for ( int i = 0 ; i < 40 ; i++){
         Trap *trap = new Trap(800+ i*200, this->getGroundLevel() - 11 , path2 ,2 );
@@ -178,6 +209,14 @@ void Game::createMap() {
 
 }
 
+void Game::mapDisplayersToScene() {
+    QPointF topLeft = mapToScene(
+        SM.settings->value("window/coinsDisplayerXOffset").toInt(),
+        SM.settings->value("window/coinsDisplayerYOffset").toInt()
+        );
+    coinsDisplayer->setPos(topLeft.x(), topLeft.y());
+}
+
 
 // Getters
 float Game::getGroundLevel() {
@@ -199,6 +238,7 @@ int Game::getSceneWidth() {
 int Game::getSceneHeight() {
     return level->getSceneHeight();
 }
+
 
 // Destructor
 Game::~Game() {
