@@ -61,6 +61,9 @@ void Game::init() {
         );
     scene->addItem(coinsDisplayer);
 
+    // Connect state change signal
+    connect(state, &State::stateChanged, this, &Game::handleStateChange);
+
 }
 
 
@@ -99,6 +102,8 @@ void Game::startCurrentLevel() {
 
     // End flag position
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
+
+    // Initialize state
 
 }
 
@@ -159,6 +164,10 @@ void Game::KeyPressEvent(QKeyEvent *event)
     QGraphicsView::keyPressEvent(event);
 }
 
+void Game::handleStateChange() {
+    coinsDisplayer->set(state->getCoins());
+}
+
 // Helpers
 void Game::moveWithPlayer() {
 
@@ -173,10 +182,10 @@ void Game::createMap() {
     // create traps in all ground
 
 
-    // Create coins
+    // // Create coins
     QString path = SM.settings->value("coin/spriteSheet/1").toString();
 
-    // Create pixmap
+    // // // Create pixmap
     for ( int i = 0 ; i < 40 ; i++){
         Coin *coin = new Coin(800+ i*200, this->getGroundLevel() -200 , 2 , 1 , path);
         elements.push_back(coin);

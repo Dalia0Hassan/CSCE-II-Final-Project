@@ -36,6 +36,7 @@ void State::setLevel(int level) {
 void State::setIsGameOver(bool isGameOver) { this->isGameOver = isGameOver; emit stateChanged(); }
 void State::setIsPaused(bool isPaused) { this->isPaused = isPaused; emit stateChanged(); }
 void State::incrementCoins() { setCoins(getCoins() + 1); emit stateChanged(); }
+void State::decrementCoins() { setCoins(getCoins() - 1); emit stateChanged(); }
 void State::decrementLives() { setLives(getLives() - 1); emit stateChanged(); }
 void State::increamentLives() { setLives(getLives() + 1); emit stateChanged(); }
 

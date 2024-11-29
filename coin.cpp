@@ -5,21 +5,25 @@
 
 extern Game *game;
 
+QStringList Coin::getSoundPaths() {
+    static QStringList soundPaths = QStringList({
+        SM.settings->value("audio/coinPickUp/1").toString(),
+        SM.settings->value("audio/coinPickUp/2").toString(),
+        SM.settings->value("audio/coinPickUp/3").toString()
+    });
+    return soundPaths;
+}
 
-QStringList Coin::soundPaths = QStringList({
-    SM.settings->value("audio/coinPickUp/1").toString(),
-    SM.settings->value("audio/coinPickUp/2").toString(),
-    SM.settings->value("audio/coinPickUp/3").toString()
-});
-
-qreal Coin::volume = SM.settings->value("audio/coin_volume").toReal();
+qreal Coin::getVolume() {
+    static qreal volume = SM.settings->value("audio/coin_volume").toReal();
+    return volume;
+}
 
 Coin::Coin( qreal x , qreal y , qreal scale , qreal value, QString spriteSheetPath)
 {
     // Set the image
     setProperties(20, 20, 2, 1, 19, 19);
     setSpritePixmap(QPixmap(spriteSheetPath));
-    animateSprite(repeating);
     // Set the position
     setPos(x , y);
     // Set the scale
@@ -28,10 +32,6 @@ Coin::Coin( qreal x , qreal y , qreal scale , qreal value, QString spriteSheetPa
     this->value = value;
     // Set the sound
     setRandomSound();
-    // Check collision every 16 ms
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Coin::handleCollision);  // Correct connection
-    timer->start(16);  // Check collisions every 16ms (60 FPS)
 
 }
 
@@ -44,27 +44,8 @@ Coin::~Coin()
 void Coin::setRandomSound()
 {
     // Set the sound
-    int mx = soundPaths.size() - 1;
-    this->coinSound = new Sound(soundPaths[RandomNumber(0 ,mx)], volume , QMediaPlayer::Loops::Once);
-}
-
-void Coin::handleCollision()
-{
-    // if the player collides with the coin
-    for ( auto &i :  collidingItems())
-    {
-        Player *player = dynamic_cast<Player*>(i);
-        if ( player != nullptr)
-        {
-            // Play the sound
-            coinSound->play();
-
-            game->coinsDisplayer->increase(value);
-
-            // Delete coin from the scene
-            scene()->removeItem(this);
-        }
-    }
+    int mx = getSoundPaths().size() - 1;
+    this->coinSound = new Sound(getSoundPaths()[RandomNumber(0 ,mx)], getVolume() , QMediaPlayer::Loops::Once);
 }
 
 qreal Coin::getValue() const
