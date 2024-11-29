@@ -8,6 +8,7 @@
 #include <QMediaPlayer>
 #include "sound.h"
 #include "state.h"
+#include"livesdisplay.h"
 
 class Game : public QGraphicsView
 {
@@ -27,6 +28,7 @@ private:
     // UI
     QGraphicsPixmapItem *endFlag;
     CoinsDisplay *coinsDisplayer;
+    livesDisplay *lifedisplayer;
 
 public:
     // TODO: Make them private and modify that everywhere
@@ -46,7 +48,6 @@ public:
     int getEndOffset();
     int getSceneWidth();
     int getSceneHeight();
-
 
 private:
     // Logic

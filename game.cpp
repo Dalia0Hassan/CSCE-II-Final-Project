@@ -61,6 +61,15 @@ void Game::init() {
     connect(coinTimer, &QTimer::timeout, coinsDisplayer, &CoinsDisplay::increment);
     coinTimer->start(1000);
 
+    // lives displayer
+    lifedisplayer = new livesDisplay(state);
+    lifedisplayer->setPos(
+        SM.settings->value("window/lifedisplayerXOffset").toInt(),
+        SM.settings->value("window/lifedisplayerYOffset").toInt()
+        );
+    scene->addItem(lifedisplayer);
+
+
 }
 
 
@@ -202,6 +211,13 @@ void Game::mapDisplayersToScene() {
         SM.settings->value("window/coinsDisplayerYOffset").toInt()
         );
     coinsDisplayer->setPos(topLeft.x(), topLeft.y());
+
+
+    QPointF topRight =mapToScene(
+        SM.settings->value("window/lifedisplayerXOffset").toInt(),
+        SM.settings->value("window/lifedisplayerYOffset").toInt()
+        );
+    lifedisplayer->setPos(topRight.x() , topRight.y() );
 }
 
 

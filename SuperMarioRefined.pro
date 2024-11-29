@@ -13,7 +13,7 @@ SOURCES += \
     coinsdisplay.cpp \
     game.cpp \
     level.cpp \
-    life.cpp \
+    livesdisplay.cpp \
     main.cpp \
     player.cpp \
     score.cpp \
@@ -31,7 +31,7 @@ HEADERS += \
     coinsdisplay.h \
     game.h \
     level.h \
-    life.h \
+    livesdisplay.h \
     player.h \
     score.h \
     settingsmanager.h \

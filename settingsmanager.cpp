@@ -30,7 +30,11 @@ SettingsManager::SettingsManager() {
     settings->setValue("window/coinsDisplayerFont", "Times");
     settings->setValue("window/coinsDisplayerFontSize", 25);
     settings->setValue("window/coinsDisplayerImage", ":/Assets/images/coin.png");
-
+    settings->setValue("window/lifedisplayerXOffset", 80); //<pppp
+    settings->setValue("window/lifedisplayerYOffset",0 );
+    settings->setValue("window/lifeDisplayerImage1", ":/Assets/images/lives/full_heart.png");
+    settings->setValue("window/lifeDisplayerImage2", ":/Assets/images/lives/half_heart.png");
+    settings->setValue("window/lifeDisplayerImage3", ":/Assets/images/lives/empty_heart.png");
     // Scene
     settings->setValue("scene/defaultHeight", 600);
     settings->setValue("scene/endFlag", ":/Assets/images/end_flag.png");
