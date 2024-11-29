@@ -24,7 +24,7 @@ SOURCES += \
     state.cpp \
     trap.cpp \
     utils.cpp \
-    # coin.cpp
+    coin.cpp
 
 HEADERS += \
     block.h \
@@ -41,7 +41,7 @@ HEADERS += \
     state.h \
     trap.h \
     utils.h \
-    # coin.h
+    coin.h
 
 FORMS +=
 
