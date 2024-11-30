@@ -1,31 +1,45 @@
 #ifndef LIFE_H
 #define LIFE_H
 
-#include <QWidget>
+#include <QGraphicsItem>
 #include <QPixmap>
-#include <QLabel>
-#include <QGridLayout>
+#include <QPainter>
 #include "State.h"
-class life: public QWidget
+// #include "qgridlayout.h"
+// #include "qlabel.h"
+class life: public QGraphicsItem
 {
-    Q_OBJECT
 
 
     public:
-        life(State* State, QWidget* parent = nullptr);
+        life(State* State, QGraphicsItem* parent = nullptr);
+        //~life();
+        void updateLives(int PlayerLives);
+        QRectF boundingRect() const override; // Define bounding box
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+        // void setlives(int lives);
+        void increaseLives();
+        void decreaseLives();
 
-    public slots:
-        void updateLives();
     private:
         State* state;                  // The player's state (lives)
-        QLabel* hearts[5];             // Array of QLabel to display hearts
+        static const int NumOfLives =5;
+       // QLabel* hearts[NumOfLives];             // Array of QLabel to display hearts
         QPixmap fullHeart;             // Image for a full heart
         QPixmap halfHeart;             // Image for a half heart
         QPixmap emptyHeart;            // Image for an empty heart
-        QGridLayout* layout;           // Layout to arrange the hearts in a row
+        int NumOfFullHearts =0;
+        int NumOfhalfHearts =0;
+        int NumOfemptyHearts=0;
+       //QGridLayout* layout;           // Layout to arrange the hearts in a row
+
+        int maxWidth ;
+        int maxHeight ;
+
 };
 
 #endif // LIFE_H
+
 
 
 

@@ -440,6 +440,7 @@ void Player::handleCoinCollision(QGraphicsItem* item) {
 
     // Increase the player's score
     game->state->incrementCoins();
+    game->score->increase();
 }
 
 // Shields

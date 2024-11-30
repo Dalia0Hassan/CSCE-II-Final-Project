@@ -8,6 +8,8 @@
 #include <QMediaPlayer>
 #include "sound.h"
 #include "state.h"
+#include"score.h"
+#include"life.h"
 
 class Game : public QGraphicsView
 {
@@ -31,7 +33,8 @@ public:
     CoinsDisplay *coinsDisplayer; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
-
+    Score * score;
+    life* lifeptr;
 
 public:
 
@@ -57,6 +60,7 @@ private:
     void createMap();
     void moveWithPlayer();
     void mapDisplayersToScene();
+
 
 private slots:
     // Slots

@@ -53,6 +53,15 @@ void Game::init() {
     endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
     scene->addItem(endFlag);
 
+    // create score
+
+    score = new Score();
+    scene->addItem(score);
+
+    // lives  displayer (health bar)
+    lifeptr = new life(state);
+    scene->addItem(lifeptr);
+
     // Coins displayer
     coinsDisplayer = new CoinsDisplay();
     coinsDisplayer->setPos(
@@ -104,6 +113,11 @@ void Game::startCurrentLevel() {
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
 
     // Initialize state
+
+
+    //make sure displayers remain properly positioned in each level
+// *fixes the issue that the displayers are not properly positioned until the players moves*  (delete this comment later)
+    mapDisplayersToScene();
 
 }
 
@@ -185,11 +199,14 @@ void Game::createMap() {
     // // Create coins
     QString path = SM.settings->value("coin/spriteSheet/1").toString();
 
+
+
     // // // Create pixmap
     for ( int i = 0 ; i < 40 ; i++){
         Coin *coin = new Coin(800+ i*200, this->getGroundLevel() -200 , 2 , 1 , path);
         elements.push_back(coin);
         scene->addItem(coin);
+
     }
 
 
@@ -219,11 +236,26 @@ void Game::createMap() {
 }
 
 void Game::mapDisplayersToScene() {
+
+    // coins
     QPointF topLeft = mapToScene(
         SM.settings->value("window/coinsDisplayerXOffset").toInt(),
         SM.settings->value("window/coinsDisplayerYOffset").toInt()
         );
     coinsDisplayer->setPos(topLeft.x(), topLeft.y());
+
+    //score
+
+    QPointF scorePos = mapToScene(viewport()->width() / 2.0 - score->boundingRect().width() / 2.0,  // center horrizontally to the screen
+                                  10);
+    score->setPos(scorePos.x(), scorePos.y());
+
+    // lives (health bar)
+    QPointF LivesPos = mapToScene(viewport()->width() - lifeptr->boundingRect().width(),  // top right
+                                  10);
+    lifeptr->setPos(LivesPos.x(), LivesPos.y());
+
+
 }
 
 

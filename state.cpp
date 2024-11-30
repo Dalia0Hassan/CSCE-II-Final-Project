@@ -8,6 +8,7 @@ State::State() {
 
 // Getters
 int State::getCoins() { return coins; }
+int State::getScore() { return score; }
 int State::getLives() { return lives; }
 int State::getLevel() { return level; }
 bool State::getIsGameOver() { return isGameOver; }
@@ -20,6 +21,12 @@ void State::setCoins(int coins) {
     this->coins = coins;
     emit stateChanged();
 }
+// void State::setScore(int score) {
+//     if (score < 0)
+//         throw std::invalid_argument("Coins cannot be negative");
+//     this->score = score;
+//     emit stateChanged();
+// }
 void State::setLives(int lives) {
     if (lives < 0 || lives > 5)
         throw std::invalid_argument("Lives must be between 1 and 5");
@@ -37,6 +44,9 @@ void State::setIsGameOver(bool isGameOver) { this->isGameOver = isGameOver; emit
 void State::setIsPaused(bool isPaused) { this->isPaused = isPaused; emit stateChanged(); }
 void State::incrementCoins() { setCoins(getCoins() + 1); emit stateChanged(); }
 void State::decrementCoins() { setCoins(getCoins() - 1); emit stateChanged(); }
+//void State::incrementScore() { scorePtr->increase(); emit stateChanged(); }
+//void State::decrementScore() { scorePtr->decrease(); emit stateChanged(); }
+
 void State::decrementLives() { setLives(getLives() - 1); emit stateChanged(); }
 void State::increamentLives() { setLives(getLives() + 1); emit stateChanged(); }
 
