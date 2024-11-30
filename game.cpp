@@ -1,5 +1,6 @@
 #include "game.h"
 #include "block.h"
+#include "lifedisplay.h"
 #include "trap.h"
 #include "settingsmanager.h"
 #include <QGraphicsPixmapItem>
@@ -10,6 +11,7 @@
 #include <QBrush>
 #include <QGraphicsView>
 #include "coin.h"
+#include <QGraphicsProxyWidget>
 
 
 Game::Game() {
@@ -60,6 +62,13 @@ void Game::init() {
         SM.settings->value("window/coinsDisplayerYOffset").toInt()
         );
     scene->addItem(coinsDisplayer);
+
+    // Life displayer
+    lifeDisplayer = scene->addWidget(new LifeDisplay(state));
+    lifeDisplayer->setPos(
+        SM.settings->value("window/lifeDisplayerXOffset").toInt(),
+        SM.settings->value("window/lifeDisplayerYOffset").toInt()
+        );
 
     // Connect state change signal
     connect(state, &State::stateChanged, this, &Game::handleStateChange);
@@ -219,11 +228,18 @@ void Game::createMap() {
 }
 
 void Game::mapDisplayersToScene() {
-    QPointF topLeft = mapToScene(
+    QPointF coinsTopLeft = mapToScene(
         SM.settings->value("window/coinsDisplayerXOffset").toInt(),
         SM.settings->value("window/coinsDisplayerYOffset").toInt()
         );
-    coinsDisplayer->setPos(topLeft.x(), topLeft.y());
+    coinsDisplayer->setPos(coinsTopLeft.x(), coinsTopLeft.y());
+
+
+    QPointF lifeTopLeft = mapToScene(
+        SM.settings->value("window/lifeDisplayerXOffset").toInt(),
+        SM.settings->value("window/lifeDisplayerYOffset").toInt()
+        );
+    lifeDisplayer->setPos(lifeTopLeft.x(), lifeTopLeft.y());
 }
 
 

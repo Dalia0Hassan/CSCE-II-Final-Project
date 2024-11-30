@@ -7,7 +7,7 @@
 #include "player.h"
 #include <QMediaPlayer>
 #include "sound.h"
-#include "state.h"
+#include "State.h"
 
 class Game : public QGraphicsView
 {
@@ -29,6 +29,7 @@ public:
     State *state = nullptr;
     Level *level = nullptr;
     CoinsDisplay *coinsDisplayer; // TODO: Make it private
+    QGraphicsProxyWidget *lifeDisplayer; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
 
