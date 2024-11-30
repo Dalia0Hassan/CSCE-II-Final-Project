@@ -31,7 +31,18 @@ enum AnimationType {
     repeating
 };
 
+enum EnemyActions {
+    ENEMY_IDLE,
+    ENEMY_WALK,
+    ENEMY_BEATEN,
+    ENEMY_FIGHT,
+    ENEMY_DIE,
+};
+
 extern const QVector<QString> PLAYER_ACTIONS;
+
+extern const QVector<QString> ENEMY_ACTIONS;
+
 
 int RandomNumber(int min, int max) ;
 #endif // UTILS_H

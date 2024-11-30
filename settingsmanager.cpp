@@ -101,6 +101,32 @@ SettingsManager::SettingsManager() {
     settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
     settings->setValue("audio/coinPickUp/3" , "qrc:/Assets/audio/coin_pickup_2.mp3");
 
+    // Enemy
+    settings->setValue("enemy/spriteSheetPath", ":/Assets/images/NightBorne/NightBorne.png");
+    settings->setValue("enemy/spriteWidth", 1840);
+    settings->setValue("enemy/spriteHeight", 400);
+    settings->setValue("enemy/spriteFrameWidth", 80);
+    settings->setValue("enemy/spriteFrameHeight", 80);
+    settings->setValue("enemy/spriteContentOffsetX", 0);
+    settings->setValue("enemy/spriteContentOffsetY", 0);
+    settings->setValue("enemy/spriteContentWidth", 80);
+    settings->setValue("enemy/spriteContentHeight", 80);
+    settings->setValue("enemy/spriteSheet/idle", 9*80); // 9 frames
+    settings->setValue("enemy/spriteSheet/walk", 6*80); // 6 frames
+    settings->setValue("enemy/spriteSheet/beaten", 5*80); // 5 frames
+    settings->setValue("enemy/spriteSheet/fight", 6*80); // 6 frames
+    settings->setValue("enemy/spriteSheet/die", 23*80); // 23 frames
+
+    // Order in Spritesheet (0 based)
+    settings->setValue("enemy/spriteSheet/idle/order", 0);
+    settings->setValue("enemy/spriteSheet/walk/order", 1);
+    settings->setValue("enemy/spriteSheet/fight/order", 2);
+    settings->setValue("enemy/spriteSheet/beaten/order", 3);
+    settings->setValue("enemy/spriteSheet/die/order", 4);
+
+    // Enemy speed
+    settings->setValue("enemy/walkSpeed", 4);
+
 
     // Sprites
     settings->setValue("spriteUpdateInterval", 75);

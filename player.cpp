@@ -97,7 +97,6 @@ void Player::deactivate() {
     keysPressed.clear();
 
     // Set the initial state
-    dominantAction = IDLE;
 
     // Deactivate shield
     disableShield();
@@ -489,8 +488,6 @@ void Player::setCurrentSprite() {
         newDominantAction = JUMP;
     else if (isWalking)
         newDominantAction = isRunning ? RUN : WALK;
-    else
-        newDominantAction = IDLE;
 
     if (newDominantAction != dominantAction)
         setSpritePixmap(spriteSheetImages[newDominantAction], newDominantAction == JUMP ? oneTime : repeating);

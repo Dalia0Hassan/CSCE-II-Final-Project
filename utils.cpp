@@ -9,6 +9,15 @@ const QVector<QString> PLAYER_ACTIONS = {
     "die",
 };
 
+const QVector<QString> ENEMY_ACTIONS = {
+    "idle",
+    "walk",
+    "beaten",
+    "fight",
+    "die",
+
+};
+
 
 int RandomNumber(int min, int max) {
     std::random_device rd;

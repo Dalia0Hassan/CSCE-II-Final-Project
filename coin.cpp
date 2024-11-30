@@ -32,7 +32,6 @@ Coin::Coin( qreal x , qreal y , qreal scale , qreal value, QString spriteSheetPa
     this->value = value;
     // Set the sound
     setRandomSound();
-
 }
 
 Coin::~Coin()

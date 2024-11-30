@@ -12,6 +12,7 @@
 #include <QGraphicsView>
 #include "coin.h"
 #include <QGraphicsProxyWidget>
+#include "enemy.h"
 
 
 Game::Game() {
@@ -188,7 +189,12 @@ void Game::moveWithPlayer() {
 
 // TODO: Position them according to ground level
 void Game::createMap() {
-    // create traps in all ground
+
+    // Enemy
+    Enemy *enemy = new Enemy(200, this->getGroundLevel() - 200  , 2);
+    elements.push_back(enemy);
+    scene->addItem(enemy);
+
 
 
     // // Create coins
