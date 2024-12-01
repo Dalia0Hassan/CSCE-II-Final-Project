@@ -7,7 +7,7 @@
 #include "player.h"
 #include <QMediaPlayer>
 #include "sound.h"
-#include "State.h"
+#include "state.h"
 
 class Game : public QGraphicsView
 {

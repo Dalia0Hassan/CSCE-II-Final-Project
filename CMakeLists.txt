@@ -64,6 +64,9 @@ add_executable(CSCE_II_Final_Project
 
         enemy.cpp
         enemy.h
+
+        lifedisplay.h
+        lifedisplay.cpp
 )
 
 # Link the Qt libraries to the target

@@ -191,7 +191,7 @@ void Game::moveWithPlayer() {
 void Game::createMap() {
 
     // Enemy
-    Enemy *enemy = new Enemy(200, this->getGroundLevel() - 200  , 2);
+    Enemy *enemy = new Enemy(600, this->getGroundLevel() - 125  , 2);
     elements.push_back(enemy);
     scene->addItem(enemy);
 

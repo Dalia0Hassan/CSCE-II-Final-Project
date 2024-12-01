@@ -70,19 +70,6 @@
         <file>Assets/audio/level_win_sound.mp3</file>
         <file>Assets/audio/victory_sound.mp3</file>
         <file>Assets/images/coin.png</file>
-        <file>Assets/Heart/1.png</file>
-        <file>Assets/Heart/2.png</file>
-        <file>Assets/Heart/3.png</file>
-        <file>Assets/Heart/4.png</file>
-        <file>Assets/Heart/5.png</file>
-        <file>Assets/Heart/6.png</file>
-        <file>Assets/Heart/7.png</file>
-        <file>Assets/Heart/8.png</file>
-        <file>Assets/images/NightBorne/NightBorne_attack.gif</file>
-        <file>Assets/images/NightBorne/NightBorne_death..gif</file>
-        <file>Assets/images/NightBorne/NightBorne_hurt.gif</file>
-        <file>Assets/images/NightBorne/NightBorne_idle.gif</file>
-        <file>Assets/images/NightBorne/NightBorne_run.gif</file>
         <file>Assets/images/NightBorne/NightBorne.png</file>
     </qresource>
 </RCC>
