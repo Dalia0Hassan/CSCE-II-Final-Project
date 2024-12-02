@@ -126,7 +126,10 @@ SettingsManager::SettingsManager() {
 
     // Enemy speed
     settings->setValue("enemy/walkSpeed", 4);
-
+    settings->setValue("enemy/walkRange", 400);
+    settings->setValue("enemy/fightRange", 50);
+    settings->setValue("enemy/checkPlayerInterval", 50);
+    settings->setValue("enemy/walkTimerInterval", 25);
 
     // Sprites
     settings->setValue("spriteUpdateInterval", 75);

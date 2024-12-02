@@ -36,7 +36,7 @@ Enemy::Enemy(qreal x, qreal y, qreal scale) {
     // Check the player every 100 ms
     checkPlayerTimer = new QTimer(this);
     connect(checkPlayerTimer, &QTimer::timeout, this, &Enemy::checkPlayer);
-    checkPlayerTimer->start(checkPlayerInterval*2);
+    checkPlayerTimer->start(checkPlayerInterval);
 }
 
 void Enemy::changeDirection(PlayerDirections newDirection) {
@@ -114,7 +114,7 @@ void Enemy::walkLeft() {
         if (x() - walkSpeed > 0)
             setX(x() - walkSpeed);
     });
-    walkTimer->start(checkPlayerInterval);
+    walkTimer->start(walkTimerInterval);
 }
 
 void Enemy::walkRight() {
@@ -129,7 +129,7 @@ void Enemy::walkRight() {
         if (x() + walkSpeed < game->scene->width())
             setX(x() + walkSpeed);
     });
-    walkTimer->start(checkPlayerInterval);
+    walkTimer->start(walkTimerInterval);
 }
 
 void Enemy::checkPlayer() {
@@ -167,7 +167,7 @@ void Enemy::fight() {
 }
 
 void Enemy::die() {
-    setSpritePixmap(spriteSheetImages[DIE], oneTime);
+    setSpritePixmap(spriteSheetImages[ENEMY_DIE], oneTime);
     // Time to advance frame * number of frames in the sprite sheet
     // is the time needed to play the animation
     int time = SM.settings->value("spriteUpdateInterval").toInt();

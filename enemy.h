@@ -16,9 +16,10 @@ class Enemy : public SpriteSheet
     QTimer *walkTimer;
     QTimer *checkPlayerTimer;
     int const walkSpeed = SM.settings->value("enemy/walkSpeed").toInt();
-    int const walkRange = 400;
-    int const fightRange = 50;
-    int const checkPlayerInterval = 25;
+    int const walkRange = SM.settings->value("enemy/walkRange").toInt();
+    int const fightRange = SM.settings->value("enemy/fightRange").toInt();
+    int const checkPlayerInterval = SM.settings->value("enemy/checkPlayerInterval").toInt();
+    int const walkTimerInterval = SM.settings->value("enemy/walkTimerInterval").toInt();
     EnemyActions currentState = ENEMY_DIE;
     // TODO : change it to Direction
     PlayerDirections direction = LEFT ; // Default direction
