@@ -18,7 +18,7 @@ class Enemy : public SpriteSheet
     int const walkSpeed = SM.settings->value("enemy/walkSpeed").toInt();
     int const walkRange = 400;
     int const fightRange = 50;
-    int const checkPlayerInterval = 100;
+    int const checkPlayerInterval = 25;
     EnemyActions currentState = ENEMY_DIE;
     // TODO : change it to Direction
     PlayerDirections direction = LEFT ; // Default direction

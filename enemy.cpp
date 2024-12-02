@@ -30,16 +30,13 @@ Enemy::Enemy(qreal x, qreal y, qreal scale) {
     setScale(scale);
 
     setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
-    QTimer::singleShot(1000, this, [=](){
-        setTransform(QTransform(), true);
-    });
 
     qDebug() << "Enemy Created" << x << y << scale;
 
     // Check the player every 100 ms
     checkPlayerTimer = new QTimer(this);
     connect(checkPlayerTimer, &QTimer::timeout, this, &Enemy::checkPlayer);
-    checkPlayerTimer->start(checkPlayerInterval);
+    checkPlayerTimer->start(checkPlayerInterval*2);
 }
 
 void Enemy::changeDirection(PlayerDirections newDirection) {
@@ -117,7 +114,7 @@ void Enemy::walkLeft() {
         if (x() - walkSpeed > 0)
             setX(x() - walkSpeed);
     });
-    walkTimer->start(SM.settings->value("spriteUpdateInterval").toInt());
+    walkTimer->start(checkPlayerInterval);
 }
 
 void Enemy::walkRight() {
@@ -132,13 +129,13 @@ void Enemy::walkRight() {
         if (x() + walkSpeed < game->scene->width())
             setX(x() + walkSpeed);
     });
-    walkTimer->start(SM.settings->value("spriteUpdateInterval").toInt());
+    walkTimer->start(checkPlayerInterval);
 }
 
 void Enemy::checkPlayer() {
 //    // Check if the player is in the range of the enemy 50 pixels to fight the player
+    stopWalking();
     if ( qAbs(x() - game->player->x()) <= fightRange) {
-        stopWalking();
         fight();
         return;
     }
@@ -152,25 +149,20 @@ void Enemy::checkPlayer() {
         else if ( x() > game->player->x()){
             walkLeft();
         }
-        else {
-            stopWalking();
-        }
-    } else {  // Player is not in the range
-        stopWalking();
-        changeState(ENEMY_IDLE);
     }
 }
 
 void Enemy::fight() {
 
     // Flip the enemy to face the player
-    if (x() < game->player->x() && currentState != ENEMY_FIGHT) {
-        changeDirection(RIGHT);
-    } else if ( x() < game->player->x()  && currentState != ENEMY_FIGHT) {
-        changeDirection(LEFT);
+    if ( currentState != ENEMY_FIGHT) {
+        if (x() < game->player->x()) {
+            changeDirection(RIGHT);
+        } else {
+            changeDirection(LEFT);
+        }
+        changeState(ENEMY_FIGHT);
     }
-    changeState(ENEMY_FIGHT);
-
     // game->player->applyDamage(); TODO
 }
 
