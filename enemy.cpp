@@ -4,7 +4,7 @@
 #include "game.h"
 #include <QTimer>
 
-// TODO : Fix flipping  bug
+// TODO : Fix flipping bug
 // TODO : Fix running in the wrong direction bug [ after flipping ]
 
 extern SettingsManager SM;
@@ -30,6 +30,9 @@ Enemy::Enemy(qreal x, qreal y, qreal scale) {
     setScale(scale);
 
     setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
+    QTimer::singleShot(1000, this, [=](){
+        setTransform(QTransform(), true);
+    });
 
     qDebug() << "Enemy Created" << x << y << scale;
 
@@ -45,7 +48,7 @@ void Enemy::changeDirection(PlayerDirections newDirection) {
         return;
 
     // Change the direction of the Enemy
-    setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0), true);
+    setTransform(QTransform(-1, 0, 0, 1, 2*getFrameWidth(), 0), true);
     direction = newDirection;
 }
 
@@ -101,7 +104,7 @@ void Enemy::loadSpriteSheetImages() {
 }
 
 void Enemy::walkLeft() {
-    setSpritePixmap(spriteSheetImages[WALK]);
+    changeState(ENEMY_WALK);
 
     // Flip horizontally and adjust position
     changeDirection(LEFT);
@@ -118,7 +121,7 @@ void Enemy::walkLeft() {
 }
 
 void Enemy::walkRight() {
-    setSpritePixmap(spriteSheetImages[WALK]);
+    changeState(ENEMY_WALK);
 
     // Stop walking in the other direction
     changeDirection(RIGHT);
@@ -159,14 +162,15 @@ void Enemy::checkPlayer() {
 }
 
 void Enemy::fight() {
-    changeState(ENEMY_FIGHT);
 
     // Flip the enemy to face the player
-    if (x() < game->player->x()) {
+    if (x() < game->player->x() && currentState != ENEMY_FIGHT) {
         changeDirection(RIGHT);
-    } else if ( x() < game->player->x() ) {
+    } else if ( x() < game->player->x()  && currentState != ENEMY_FIGHT) {
         changeDirection(LEFT);
     }
+    changeState(ENEMY_FIGHT);
+
     // game->player->applyDamage(); TODO
 }
 
