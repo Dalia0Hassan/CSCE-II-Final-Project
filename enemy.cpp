@@ -4,9 +4,6 @@
 #include "game.h"
 #include <QTimer>
 
-// TODO : Fix flipping bug
-// TODO : Fix running in the wrong direction bug [ after flipping ]
-
 extern SettingsManager SM;
 extern Game *game;
 

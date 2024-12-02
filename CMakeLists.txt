@@ -67,6 +67,11 @@ add_executable(CSCE_II_Final_Project
 
         lifedisplay.h
         lifedisplay.cpp
+
+        healthpotion.cpp
+        healthpotion.h
+
+
 )
 
 # Link the Qt libraries to the target

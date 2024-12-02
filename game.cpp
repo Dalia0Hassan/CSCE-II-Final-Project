@@ -13,6 +13,7 @@
 #include "coin.h"
 #include <QGraphicsProxyWidget>
 #include "enemy.h"
+#include "healthpotion.h"
 
 
 Game::Game() {
@@ -221,6 +222,13 @@ void Game::createMap() {
         Block *block = new Block(700+ i*150, 385 ,   path3 , 1 );
         elements.push_back(block);
         scene->addItem(block);
+        // Put Potions Randomly
+        int random = RandomNumber(0, 1);
+        if (random > 0){
+            auto *potion = new HealthPotion(700 + i*150  , 300  , 1.5 , SM.settings->value("potion/health/path").toString());
+            elements.push_back(potion);
+            scene->addItem(potion);
+        }
     }
 
     QString path4 = SM.settings->value("blocks/3").toString();
@@ -229,6 +237,8 @@ void Game::createMap() {
         Block *block = new Block(2800+ i*150, 300 - i*10 ,   path4 , 1);
         elements.push_back(block);
         scene->addItem(block);
+        // Put Potions Randomly
+
     }
 
 }

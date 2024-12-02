@@ -71,5 +71,6 @@
         <file>Assets/audio/victory_sound.mp3</file>
         <file>Assets/images/coin.png</file>
         <file>Assets/images/NightBorne/NightBorne.png</file>
+        <file>Assets/images/Health.png</file>
     </qresource>
 </RCC>

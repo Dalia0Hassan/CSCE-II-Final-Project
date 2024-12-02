@@ -133,6 +133,10 @@ SettingsManager::SettingsManager() {
 
     // Sprites
     settings->setValue("spriteUpdateInterval", 75);
+
+
+    // Potions
+    settings->setValue("potion/health/path", ":/Assets/images/Health.png");
 }
 
 SettingsManager::~SettingsManager() {
