@@ -30,6 +30,12 @@ SettingsManager::SettingsManager() {
     settings->setValue("window/coinsDisplayerFont", "Times");
     settings->setValue("window/coinsDisplayerFontSize", 25);
     settings->setValue("window/coinsDisplayerImage", ":/Assets/images/coin.png");
+    settings->setValue("window/lifeDisplayerXOffset", 10);
+    settings->setValue("window/lifeDisplayerYOffset", 40);
+    settings->setValue("window/lifeDisplayerFullHeartImage", ":/Assets/images/full_heart.png");
+    settings->setValue("window/lifeDisplayerHalfHeartImage", ":/Assets/images/half_heart.png");
+    settings->setValue("window/lifeDisplayerEmptyHeartImage", ":/Assets/images/empty_heart.png");
+
 
     // Scene
     settings->setValue("scene/defaultHeight", 600);
@@ -95,9 +101,42 @@ SettingsManager::SettingsManager() {
     settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
     settings->setValue("audio/coinPickUp/3" , "qrc:/Assets/audio/coin_pickup_2.mp3");
 
+    // Enemy
+    settings->setValue("enemy/spriteSheetPath", ":/Assets/images/NightBorne/NightBorne.png");
+    settings->setValue("enemy/spriteWidth", 1840);
+    settings->setValue("enemy/spriteHeight", 400);
+    settings->setValue("enemy/spriteFrameWidth", 80);
+    settings->setValue("enemy/spriteFrameHeight", 80);
+    settings->setValue("enemy/spriteContentOffsetX", 0);
+    settings->setValue("enemy/spriteContentOffsetY", 0);
+    settings->setValue("enemy/spriteContentWidth", 80);
+    settings->setValue("enemy/spriteContentHeight", 80);
+    settings->setValue("enemy/spriteSheet/idle", 9*80); // 9 frames
+    settings->setValue("enemy/spriteSheet/walk", 6*80); // 6 frames
+    settings->setValue("enemy/spriteSheet/beaten", 5*80); // 5 frames
+    settings->setValue("enemy/spriteSheet/fight", 6*80); // 6 frames
+    settings->setValue("enemy/spriteSheet/die", 23*80); // 23 frames
+
+    // Order in Spritesheet (0 based)
+    settings->setValue("enemy/spriteSheet/idle/order", 0);
+    settings->setValue("enemy/spriteSheet/walk/order", 1);
+    settings->setValue("enemy/spriteSheet/fight/order", 2);
+    settings->setValue("enemy/spriteSheet/beaten/order", 3);
+    settings->setValue("enemy/spriteSheet/die/order", 4);
+
+    // Enemy speed
+    settings->setValue("enemy/walkSpeed", 4);
+    settings->setValue("enemy/walkRange", 400);
+    settings->setValue("enemy/fightRange", 50);
+    settings->setValue("enemy/checkPlayerInterval", 50);
+    settings->setValue("enemy/walkTimerInterval", 25);
 
     // Sprites
     settings->setValue("spriteUpdateInterval", 75);
+
+
+    // Potions
+    settings->setValue("potion/health/path", ":/Assets/images/Health.png");
 }
 
 SettingsManager::~SettingsManager() {

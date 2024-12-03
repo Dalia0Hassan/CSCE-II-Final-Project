@@ -12,8 +12,9 @@ SOURCES += \
     block.cpp \
     coinsdisplay.cpp \
     game.cpp \
+    healthpotion.cpp \
     level.cpp \
-    life.cpp \
+    lifedisplay.cpp \
     main.cpp \
     player.cpp \
     score.cpp \
@@ -24,14 +25,15 @@ SOURCES += \
     state.cpp \
     trap.cpp \
     utils.cpp \
-    # coin.cpp
+    coin.cpp
 
 HEADERS += \
     block.h \
     coinsdisplay.h \
     game.h \
+    healthpotion.h \
     level.h \
-    life.h \
+    lifedisplay.h \
     player.h \
     score.h \
     settingsmanager.h \
@@ -41,7 +43,7 @@ HEADERS += \
     state.h \
     trap.h \
     utils.h \
-    # coin.h
+    coin.h
 
 FORMS +=
 

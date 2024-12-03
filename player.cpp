@@ -61,7 +61,9 @@ void Player::startLevel() {
 
     // Set the player's initial position and sprite
     setSpritePixmap(spriteSheetImages[dominantAction]);
-    animateSprite();
+
+    qDebug() << "Sprite pixmap set" << pixmap().width() << pixmap().height();
+    qDebug() << spriteSheetImages[dominantAction].width() << spriteSheetImages[dominantAction].height();
     setPos(game->getStartOffset(), game->getGroundLevel() - boundingRect().height());
 
     // Shield
@@ -95,7 +97,6 @@ void Player::deactivate() {
     keysPressed.clear();
 
     // Set the initial state
-    dominantAction = IDLE;
 
     // Deactivate shield
     disableShield();
@@ -108,7 +109,7 @@ void Player::handleWalking() {
     // Play Walking sound
     walkSound->play();
     // Start timer to handle horizontal movement
-    walkTimer->start(16);
+    walkTimer->start(walkTimerInterval);
 
 }
 
@@ -402,6 +403,12 @@ void Player::handleCollision() {
         // If the item is a trap
         if (item->type() == TrapType)
             handleDangerCollision(item);
+        else if (item->type() == CoinType)
+            handleCoinCollision(item);
+        // else if (item->type() == ShieldType)
+        //     handleShieldCollision(item);
+        // else if (item->type() == PowerUpType)
+        //     handlePowerUpCollision(item);
     }
 }
 
@@ -419,6 +426,19 @@ void Player::handleDangerCollision(QGraphicsItem* item) {
     // Otherwise, die
     else
         handleDying();
+}
+
+void Player::handleCoinCollision(QGraphicsItem* item) {
+
+    // Remove item from the scene and delete it
+    game->scene->removeItem(item);
+    delete item;
+
+    // Play coin sound
+    coinSound->play();
+
+    // Increase the player's score
+    game->state->incrementCoins();
 }
 
 // Shields
@@ -468,13 +488,9 @@ void Player::setCurrentSprite() {
         newDominantAction = JUMP;
     else if (isWalking)
         newDominantAction = isRunning ? RUN : WALK;
-    else
-        newDominantAction = IDLE;
 
-    if (newDominantAction != dominantAction) {
-        setSpritePixmap(spriteSheetImages[newDominantAction]);
-        animateSprite(newDominantAction == JUMP ? oneTime : repeating);
-    }
+    if (newDominantAction != dominantAction)
+        setSpritePixmap(spriteSheetImages[newDominantAction], newDominantAction == JUMP ? oneTime : repeating);
 
     dominantAction = newDominantAction;
 }

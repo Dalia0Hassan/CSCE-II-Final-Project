@@ -15,9 +15,6 @@ class Game : public QGraphicsView
 private:
 
     // Trackers
-    QVector<QGraphicsPixmapItem*> elements;
-    State *state = nullptr;
-    Level *level = nullptr;
     // Sounds
     Sound *victorySound, *levelWinSound;
     Sound *bgMusicPlayer;
@@ -28,7 +25,11 @@ private:
 
 public:
     // TODO: Make them private and modify that everywhere
+    QVector<QGraphicsPixmapItem*> elements;
+    State *state = nullptr;
+    Level *level = nullptr;
     CoinsDisplay *coinsDisplayer; // TODO: Make it private
+    QGraphicsProxyWidget *lifeDisplayer; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
 
@@ -58,10 +59,11 @@ private:
     void moveWithPlayer();
     void mapDisplayersToScene();
 
-public slots:
+private slots:
     // Slots
     void handlePlayerMovement();
     void KeyPressEvent(QKeyEvent *event);
+    void handleStateChange();
 
     // Friends
     friend int main(int argc, char *argv[]);

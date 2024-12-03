@@ -1,5 +1,6 @@
 #include "game.h"
 #include "block.h"
+#include "lifedisplay.h"
 #include "trap.h"
 #include "settingsmanager.h"
 #include <QGraphicsPixmapItem>
@@ -10,6 +11,9 @@
 #include <QBrush>
 #include <QGraphicsView>
 #include "coin.h"
+#include <QGraphicsProxyWidget>
+#include "enemy.h"
+#include "healthpotion.h"
 
 
 Game::Game() {
@@ -61,6 +65,16 @@ void Game::init() {
         );
     scene->addItem(coinsDisplayer);
 
+    // Life displayer
+    lifeDisplayer = scene->addWidget(new LifeDisplay(state));
+    lifeDisplayer->setPos(
+        SM.settings->value("window/lifeDisplayerXOffset").toInt(),
+        SM.settings->value("window/lifeDisplayerYOffset").toInt()
+        );
+
+    // Connect state change signal
+    connect(state, &State::stateChanged, this, &Game::handleStateChange);
+
 }
 
 
@@ -99,6 +113,8 @@ void Game::startCurrentLevel() {
 
     // End flag position
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
+
+    // Initialize state
 
 }
 
@@ -159,6 +175,10 @@ void Game::KeyPressEvent(QKeyEvent *event)
     QGraphicsView::keyPressEvent(event);
 }
 
+void Game::handleStateChange() {
+    coinsDisplayer->set(state->getCoins());
+}
+
 // Helpers
 void Game::moveWithPlayer() {
 
@@ -170,13 +190,18 @@ void Game::moveWithPlayer() {
 
 // TODO: Position them according to ground level
 void Game::createMap() {
-    // create traps in all ground
+
+    // Enemy
+    Enemy *enemy = new Enemy(600, this->getGroundLevel() - 125  , 2);
+    elements.push_back(enemy);
+    scene->addItem(enemy);
 
 
-    // Create coins
+
+    // // Create coins
     QString path = SM.settings->value("coin/spriteSheet/1").toString();
 
-    // Create pixmap
+    // // // Create pixmap
     for ( int i = 0 ; i < 40 ; i++){
         Coin *coin = new Coin(800+ i*200, this->getGroundLevel() -200 , 2 , 1 , path);
         elements.push_back(coin);
@@ -197,6 +222,13 @@ void Game::createMap() {
         Block *block = new Block(700+ i*150, 385 ,   path3 , 1 );
         elements.push_back(block);
         scene->addItem(block);
+        // Put Potions Randomly
+        int random = RandomNumber(0, 1);
+        if (random > 0){
+            auto *potion = new HealthPotion(700 + i*150  , 300  , 1.5 , SM.settings->value("potion/health/path").toString());
+            elements.push_back(potion);
+            scene->addItem(potion);
+        }
     }
 
     QString path4 = SM.settings->value("blocks/3").toString();
@@ -205,16 +237,25 @@ void Game::createMap() {
         Block *block = new Block(2800+ i*150, 300 - i*10 ,   path4 , 1);
         elements.push_back(block);
         scene->addItem(block);
+        // Put Potions Randomly
+
     }
 
 }
 
 void Game::mapDisplayersToScene() {
-    QPointF topLeft = mapToScene(
+    QPointF coinsTopLeft = mapToScene(
         SM.settings->value("window/coinsDisplayerXOffset").toInt(),
         SM.settings->value("window/coinsDisplayerYOffset").toInt()
         );
-    coinsDisplayer->setPos(topLeft.x(), topLeft.y());
+    coinsDisplayer->setPos(coinsTopLeft.x(), coinsTopLeft.y());
+
+
+    QPointF lifeTopLeft = mapToScene(
+        SM.settings->value("window/lifeDisplayerXOffset").toInt(),
+        SM.settings->value("window/lifeDisplayerYOffset").toInt()
+        );
+    lifeDisplayer->setPos(lifeTopLeft.x(), lifeTopLeft.y());
 }
 
 

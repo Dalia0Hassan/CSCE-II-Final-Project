@@ -1,18 +1,18 @@
-#ifndef LIFE_H
-#define LIFE_H
+#ifndef LIFEDISPLAY_H
+#define LIFEDISPLAY_H
 
 #include <QWidget>
 #include <QPixmap>
 #include <QLabel>
 #include <QGridLayout>
 #include "State.h"
-class life: public QWidget
+class LifeDisplay: public QWidget
 {
     Q_OBJECT
 
 
     public:
-        life(State* State, QWidget* parent = nullptr);
+        LifeDisplay(State* State, QWidget* parent = nullptr);
 
     public slots:
         void updateLives();
@@ -25,7 +25,7 @@ class life: public QWidget
         QGridLayout* layout;           // Layout to arrange the hearts in a row
 };
 
-#endif // LIFE_H
+#endif // LIFEDISPLAY_H
 
 
 

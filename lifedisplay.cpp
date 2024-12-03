@@ -1,14 +1,15 @@
-#include "life.h"
+#include "lifedisplay.h"
+#include "settingsmanager.h"
 #include <QGridLayout>
 #include <QPixmap>
 
-life::life(State* state, QWidget* parent)
+LifeDisplay::LifeDisplay(State* state, QWidget* parent)
     : QWidget(parent), state(state) {
 
     // Load the heart images
-    fullHeart.load(":/Assets/images/full_heart.png");
-    halfHeart.load(":/Assets/images/half_heart.png");
-    emptyHeart.load(":/Assets/images/empty_heart.png");
+    fullHeart.load(SM.settings->value("window/lifeDisplayerFullHeartImage").toString());
+    halfHeart.load(SM.settings->value("window/lifeDisplayerHalfHeartImage").toString());
+    emptyHeart.load(SM.settings->value("window/lifeDisplayerEmptyHeartImage").toString());
 
     layout = new QGridLayout(this);
 
@@ -20,10 +21,10 @@ life::life(State* state, QWidget* parent)
     }
 
     // Connect the stateChanged signal to update the heart display
-    connect(state, &State::stateChanged, this, &life::updateLives);
+    connect(state, &State::stateChanged, this, &LifeDisplay::updateLives);
 }
 
-void life::updateLives() {
+void LifeDisplay::updateLives() {
     float lives = state->getLives(); // between 1.0 and 5.0 (the 0.5 stands for half a life)
     // lives =0 will be "game over"
     // Determine the number of full, half, and empty hearts

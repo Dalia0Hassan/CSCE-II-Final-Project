@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <random>
 
 const QVector<QString> PLAYER_ACTIONS = {
     "idle",
@@ -6,6 +7,15 @@ const QVector<QString> PLAYER_ACTIONS = {
     "run",
     "jump",
     "die",
+};
+
+const QVector<QString> ENEMY_ACTIONS = {
+    "idle",
+    "walk",
+    "beaten",
+    "fight",
+    "die",
+
 };
 
 

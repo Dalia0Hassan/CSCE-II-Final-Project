@@ -41,25 +41,19 @@ CoinsDisplay::CoinsDisplay(int initialValue, QGraphicsItem * parent) : QGraphics
 
 // Setters
 void CoinsDisplay::set(int newValue){
+    if (value < 0)
+        throw std::invalid_argument("Coins cannot be negative");
+
     value = newValue;
     updateText();
 }
-void CoinsDisplay::increase(int val )  {
-    set( value + val);
-}
-
-void CoinsDisplay::decrease(int val ) {
-    if ( value - val < 0)
-        throw "Coins cannot be negative";
-    set( value - val);
-}
 
 void CoinsDisplay::increment() {
-    increase(1);
+    set(value + 1);
 }
 
 void CoinsDisplay::decrement() {
-    decrease(1);
+    set(value - 1);
 }
 
 // Helpers
