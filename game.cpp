@@ -70,6 +70,8 @@ void Game::init() {
         SM.settings->value("window/lifeDisplayerYOffset").toInt()
         );
 
+    state->stateChanged();
+
     // Connect state change signal
     connect(state, &State::stateChanged, this, &Game::handleStateChange);
 
