@@ -644,6 +644,9 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
 //     setFocus();
 // }
 
+int Player::xCenter() {
+    return x() + boundingRect().width() / 2;
+}
 
 // Destructor
 Player::~Player() {
