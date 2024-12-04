@@ -92,6 +92,8 @@ void Game::startCurrentLevel() {
     if (level != nullptr)
         delete level;
 
+    if (startingMenu != nullptr)
+        startingMenu->close();
     this->show();
 
     level = new Level(LEVELS[state->getLevel() - 1]);
