@@ -70,5 +70,25 @@
         <file>Assets/audio/level_win_sound.mp3</file>
         <file>Assets/audio/victory_sound.mp3</file>
         <file>Assets/images/coin.png</file>
+        <file>Assets/images/Samurai/Attack_1.png</file>
+        <file>Assets/images/Samurai/Attack_2.png</file>
+        <file>Assets/images/Samurai/Attack_3.png</file>
+        <file>Assets/images/Samurai/Hurt.png</file>
+        <file>Assets/images/Samurai/Idle.png</file>
+        <file>Assets/images/Samurai/Jump.png</file>
+        <file>Assets/images/Samurai/Run.png</file>
+        <file>Assets/images/Samurai/Shield.png</file>
+        <file>Assets/images/Samurai/Walk.png</file>
+        <file>Assets/images/Raider_1/Attack_1.png</file>
+        <file>Assets/images/Raider_1/Attack_2.png</file>
+        <file>Assets/images/Raider_1/Hurt.png</file>
+        <file>Assets/images/Raider_1/Idle.png</file>
+        <file>Assets/images/Raider_1/Jump.png</file>
+        <file>Assets/images/Raider_1/Recharge.png</file>
+        <file>Assets/images/Raider_1/Run.png</file>
+        <file>Assets/images/Raider_1/Shot.png</file>
+        <file>Assets/images/Raider_1/Walk.png</file>
+        <file>Assets/images/Samurai/Die.png</file>
+        <file>Assets/images/Raider_1/Die.png</file>
     </qresource>
 </RCC>

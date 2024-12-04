@@ -55,15 +55,10 @@ void Player::startLevel() {
     if (!scene()->items().contains(shield))
         scene()->addItem(shield);
 
-    // // enable shield after 1 seconds (Debugging)
-    // QTimer::singleShot(1000, this, &Player::enableShield);
-
 
     // Set the player's initial position and sprite
     setSpritePixmap(spriteSheetImages[dominantAction]);
 
-    qDebug() << "Sprite pixmap set" << pixmap().width() << pixmap().height();
-    qDebug() << spriteSheetImages[dominantAction].width() << spriteSheetImages[dominantAction].height();
     setPos(game->getStartOffset(), game->getGroundLevel() - boundingRect().height());
 
     // Shield
@@ -460,6 +455,7 @@ void Player::setDominantAction(PlayerActions action) {
     dominantAction = action;
 }
 
+
 // Helpers
 void Player::loadAudioFiles() {
     jumpSound = new Sound(SM.settings->value("audio/jumpSound").toString());
@@ -472,13 +468,15 @@ void Player::loadAudioFiles() {
 }
 
 void Player::loadSpriteSheetImages() {
+
     for(int i = 0; i < PLAYER_ACTIONS.size(); i++) {
         QString filename = PLAYER_ACTIONS[i];
         filename[0] = filename[0].toUpper();
-        QString path = QString(":/Assets/images/Fighter/%1.png").arg(filename);
+        QString path = QString(":/Assets/images/Fighter/%2.png").arg(filename);
         QPixmap pixmap(path);
         spriteSheetImages.push_back(pixmap);
     }
+
 }
 
 void Player::setCurrentSprite() {

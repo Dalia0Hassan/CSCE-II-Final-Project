@@ -30,9 +30,9 @@ void Game::init() {
     startingMenu = new StartingMenu();
     startingMenu->show();
 
-    // Connect menu signals to game slots
     connect(startingMenu, &StartingMenu::startGameSignal, this, &Game::startCurrentLevel);
     connect(startingMenu, &StartingMenu::exitGameSignal, this, &Game::close);
+
 
     // Initialize state and level
     state = new State();
@@ -106,6 +106,7 @@ void Game::startCurrentLevel() {
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
     player->startLevel();
+
 
     // Move with player
     // Disconnect from the playerPositionChanged signal and connect again
@@ -292,4 +293,10 @@ Game::~Game() {
     delete levelWinSound;
     delete state;
     delete endFlag;
+    delete coinsDisplayer;
+    delete lifeDisplayer;
+    delete startingMenu;
+    for (auto element : elements)
+        delete element;
+
 }

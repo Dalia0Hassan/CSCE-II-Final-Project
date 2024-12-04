@@ -81,6 +81,7 @@ public:
 
     // Setters
     void setDominantAction(PlayerActions action);
+    void setCurrentKit(int kitIndex);
 
 private:
 
