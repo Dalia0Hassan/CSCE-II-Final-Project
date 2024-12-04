@@ -6,7 +6,6 @@
 #include "level.h"
 #include "player.h"
 #include <QMediaPlayer>
-#include "sound.h"
 #include "State.h"
 #include "startingmenu.h"
 
@@ -15,18 +14,9 @@ class Game : public QGraphicsView
     Q_OBJECT
 private:
 
-    // Trackers
-    // Sounds
-    Sound *victorySound, *levelWinSound;
-    Sound *bgMusicPlayer;
-
-
     // UI
     QGraphicsPixmapItem *endFlag;
     StartingMenu *startingMenu;
-
-    // Flags
-    bool menuVisible = true;
 
 public:
     // TODO: Make them private and modify that everywhere

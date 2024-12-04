@@ -1,5 +1,6 @@
 #include "player.h"
 #include "game.h"
+#include "soundplayer.h"
 
 Player::Player() {
 
@@ -10,9 +11,6 @@ Player::Player() {
 
 // Logic
 void Player::init() {
-
-    // Loading audio files
-    loadAudioFiles();
 
     // Loading sprite sheets
     loadSpriteSheetImages();
@@ -103,7 +101,7 @@ void Player::handleWalking() {
 
     isWalking = true;
     // Play Walking sound
-    walkSound->play();
+    SP.walkSound->play();
     // Start timer to handle horizontal movement
     walkTimer->start(walkTimerInterval);
 
@@ -111,7 +109,7 @@ void Player::handleWalking() {
 
 void Player::stopWalking() {
     // Stop walking sound
-    walkSound->stop();
+    SP.walkSound->stop();
     // Stop the horizontal movement timer
     walkTimer->stop();
     // Remove the walking action
@@ -184,7 +182,7 @@ void Player::handleJumping() {
     isJumping = true;
 
     // Play jump sound
-    jumpSound->play();
+    SP.jumpSound->play();
 
     // Set the initial vertical velocity
     verticalVelocity = jumpVelocity;
@@ -367,7 +365,7 @@ void Player::handleDying() {
 void Player::die() {
 
     // Play dying sound
-    dieSound->play();
+    SP.dieSound->play();
 
     // Stop the dying after 225ms
     QTimer::singleShot(225, this, &Player::stopDying);
@@ -417,7 +415,7 @@ void Player::handleDangerCollision(QGraphicsItem* item) {
         delete item;
 
         // Play destroy sound
-        destroySound->play();
+        SP.destroySound->play();
     }
     // Otherwise, die
     else
@@ -431,7 +429,7 @@ void Player::handleCoinCollision(QGraphicsItem* item) {
     delete item;
 
     // Play coin sound
-    coinSound->play();
+    SP.coinSound->play();
 
     // Increase the player's score
     game->state->incrementCoins();
@@ -440,8 +438,8 @@ void Player::handleCoinCollision(QGraphicsItem* item) {
 // Shields
 void Player::enableShield() {
     shield->setOpacity(1);
-    shieldActiviationSound->play();
-    wooHooSound->play();
+    SP.shieldActiviationSound->play();
+    SP.wooHooSound->play();
     hasShield = true;
 }
 
@@ -457,16 +455,6 @@ void Player::setDominantAction(PlayerActions action) {
 
 
 // Helpers
-void Player::loadAudioFiles() {
-    jumpSound = new Sound(SM.settings->value("audio/jumpSound").toString());
-    walkSound = new Sound(SM.settings->value("audio/walkSound").toString(), 1, QMediaPlayer::Infinite);
-    dieSound = new Sound(SM.settings->value("audio/dieSound").toString());
-    shieldActiviationSound = new Sound(SM.settings->value("audio/shieldActivationSound").toString());
-    coinSound = new Sound(SM.settings->value("audio/coinSound").toString());
-    destroySound = new Sound(SM.settings->value("audio/destroySound").toString());
-    wooHooSound = new Sound(SM.settings->value("audio/wooHooSound").toString());
-}
-
 void Player::loadSpriteSheetImages() {
 
     for(int i = 0; i < PLAYER_ACTIONS.size(); i++) {
@@ -539,12 +527,14 @@ void Player::moveToStartOver() {
     // New Timer
     QTimer *timer = new QTimer(this);
 
+    setY(game->getGroundLevel() - boundingRect().height());
+
     // Connect
     connect(timer, &QTimer::timeout, this, [=](){
 
         // Move the player to the start position
         if (x() > game->getStartOffset()) {
-            setX(x() - 15);
+            setX(x() - 20);
             emit playerPositionChanged();
         }
 
@@ -639,18 +629,9 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
     setCurrentSprite();
 }
 
-// void Player::focusOutEvent(QFocusEvent *event) {
-//     // Give the focus back to the player
-//     Q_UNUSED(event);
-//     setFocus();
-// }
-
 
 // Destructor
 Player::~Player() {
-    delete jumpSound;
-    delete walkSound;
-    delete dieSound;
     delete jumpTimer;
     delete walkTimer;
     delete fallTimer;

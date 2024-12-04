@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "startingmenu.h"
 #include "game.h"
+#include "soundplayer.h"
 
 extern Game *game;
 
@@ -19,7 +20,7 @@ StartingMenu::StartingMenu(QWidget *parent) : QWidget(parent) {
 
 void StartingMenu::setupUI() {
     // Set window properties
-    this->setWindowTitle("RUN - Starting StartingMenu");
+    this->setWindowTitle("RUN - Starting Menu");
     this->resize(800, 600);
 
     // Add background image
@@ -74,10 +75,15 @@ void StartingMenu::setupUI() {
 }
 
 void StartingMenu::startGame() {
+    SP.buttonClickSound->play();
     emit startGameSignal();
 }
 
 
 void StartingMenu::exitGame() {
-    emit exitGameSignal();
+    SP.buttonClickSound->play();
+    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Exit", "Are you sure you want to exit?",
+                                                              QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+        emit exitGameSignal();
 }
