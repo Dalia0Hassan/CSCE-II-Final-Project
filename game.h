@@ -8,6 +8,7 @@
 #include <QMediaPlayer>
 #include "sound.h"
 #include "State.h"
+#include "startingmenu.h"
 
 class Game : public QGraphicsView
 {
@@ -22,6 +23,10 @@ private:
 
     // UI
     QGraphicsPixmapItem *endFlag;
+    StartingMenu *startingMenu;
+
+    // Flags
+    bool menuVisible = true;
 
 public:
     // TODO: Make them private and modify that everywhere
@@ -53,6 +58,8 @@ private:
     void init();
     void startCurrentLevel();
     void handleNewLevel();
+    void toggleMenu();
+    void close();
 
     // Helpers
     void createMap();

@@ -21,6 +21,7 @@ SOURCES += \
     shieldeffect.cpp \
     sound.cpp \
     spritesheet.cpp \
+    startingmenu.cpp \
     state.cpp \
     trap.cpp \
     utils.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     shieldeffect.h \
     sound.h \
     spritesheet.h \
+    startingmenu.h \
     state.h \
     trap.h \
     utils.h \

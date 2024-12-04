@@ -1,6 +1,7 @@
 #include "game.h"
 #include "block.h"
 #include "lifedisplay.h"
+#include "qapplication.h"
 #include "trap.h"
 #include "settingsmanager.h"
 #include <QGraphicsPixmapItem>
@@ -25,6 +26,13 @@ Game::Game() {
 // Logic
 void Game::init() {
 
+    // Initialize game starting menu
+    startingMenu = new StartingMenu();
+    startingMenu->show();
+
+    // Connect menu signals to game slots
+    connect(startingMenu, &StartingMenu::startGameSignal, this, &Game::startCurrentLevel);
+    connect(startingMenu, &StartingMenu::exitGameSignal, this, &Game::close);
 
     // Initialize state and level
     state = new State();
@@ -70,7 +78,7 @@ void Game::init() {
         SM.settings->value("window/lifeDisplayerYOffset").toInt()
         );
 
-    state->stateChanged();
+    emit state->stateChanged();
 
     // Connect state change signal
     connect(state, &State::stateChanged, this, &Game::handleStateChange);
@@ -83,6 +91,8 @@ void Game::startCurrentLevel() {
     // Initialize level
     if (level != nullptr)
         delete level;
+
+    this->show();
 
     level = new Level(LEVELS[state->getLevel() - 1]);
 
@@ -144,6 +154,10 @@ void Game::handleNewLevel() {
             state->setIsGameOver(true);
     });
 
+}
+
+void Game::close() {
+    QApplication::quit();
 }
 
 // Slots
