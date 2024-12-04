@@ -15,6 +15,8 @@ SettingsManager::SettingsManager() {
     settings->setValue("audio/coinSound" , "qrc:/Assets/audio/coin_pickup.mp3");
 
     settings->setValue("audio/bg/music", "qrc:/Assets/audio/bg_music_1.mp3");
+    settings->setValue("audio/startingMenu/music", "qrc:/Assets/audio/starting-menu-music.mp3");
+    settings->setValue("audio/startingMenu/clickSound", "qrc:/Assets/audio/button-click-sound.mp3");
     settings->setValue("audio/victorySound", "qrc:/Assets/audio/victory_sound.mp3");
     settings->setValue("audio/levelWinSound", "qrc:/Assets/audio/level_win_sound.mp3");
 

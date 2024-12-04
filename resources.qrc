@@ -90,5 +90,7 @@
         <file>Assets/images/Raider_1/Walk.png</file>
         <file>Assets/images/Samurai/Die.png</file>
         <file>Assets/images/Raider_1/Die.png</file>
+        <file>Assets/audio/button-click-sound.mp3</file>
+        <file>Assets/audio/starting-menu-music.mp3</file>
     </qresource>
 </RCC>

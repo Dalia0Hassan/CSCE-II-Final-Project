@@ -20,6 +20,7 @@ SOURCES += \
     settingsmanager.cpp \
     shieldeffect.cpp \
     sound.cpp \
+    soundplayer.cpp \
     spritesheet.cpp \
     startingmenu.cpp \
     state.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     settingsmanager.h \
     shieldeffect.h \
     sound.h \
+    soundplayer.h \
     spritesheet.h \
     startingmenu.h \
     state.h \

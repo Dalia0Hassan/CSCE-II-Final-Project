@@ -13,6 +13,7 @@
 #include <QGraphicsView>
 #include "coin.h"
 #include <QGraphicsProxyWidget>
+#include <soundplayer.h>
 
 
 Game::Game() {
@@ -25,6 +26,12 @@ Game::Game() {
 
 // Logic
 void Game::init() {
+
+    // Initialize sound player
+    SP.init();
+
+    // Play starting menu sound
+    SP.startingMenuMusic->play();
 
     // Initialize game starting menu
     startingMenu = new StartingMenu();
@@ -51,13 +58,6 @@ void Game::init() {
     player = new Player();
     scene->addItem(player);
     connect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
-
-    // Background music
-    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
-
-    // Victory sound
-    victorySound = new Sound(SM.settings->value("audio/victorySound").toString());
-    levelWinSound = new Sound(SM.settings->value("audio/levelWinSound").toString());
 
     // End flag
     endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
@@ -92,8 +92,17 @@ void Game::startCurrentLevel() {
     if (level != nullptr)
         delete level;
 
+    this->setWindowTitle("RUN - Level " + QString::number(state->getLevel()));
+
     if (startingMenu != nullptr)
         startingMenu->close();
+
+    // Adjusting Sound
+    SP.startingMenuMusic->stop();
+    QTimer::singleShot(1000, [=](){
+        SP.bgMusic->play();
+    });
+
     this->show();
 
     level = new Level(LEVELS[state->getLevel() - 1]);
@@ -122,7 +131,7 @@ void Game::startCurrentLevel() {
     createMap();
 
     // Play Background Music
-    bgMusicPlayer->play();
+    SP.bgMusic->play();
 
     // End flag position
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
@@ -140,14 +149,14 @@ void Game::handleNewLevel() {
     player->deactivate();
 
     // Stop the background music
-    bgMusicPlayer->stop();
+    SP.bgMusic->stop();
 
     // Play the win sound
-    levelWinSound->play();
+    SP.levelWinSound->play();
 
     // play "victory" sound after 500 ms
     QTimer::singleShot(1000, [=](){
-        victorySound->play();
+        SP.victorySound->play();
         if (state->getLevel() != LEVELS.size()) {
             state->setLevel(state->getLevel() + 1);
             startCurrentLevel();
@@ -286,9 +295,6 @@ int Game::getSceneHeight() {
 Game::~Game() {
     delete scene;
     delete player;
-    delete bgMusicPlayer;
-    delete victorySound;
-    delete levelWinSound;
     delete state;
     delete endFlag;
     delete coinsDisplayer;
