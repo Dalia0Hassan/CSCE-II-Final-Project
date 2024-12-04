@@ -12,7 +12,6 @@ SOURCES += \
     block.cpp \
     coinsdisplay.cpp \
     game.cpp \
-    healthpotion.cpp \
     level.cpp \
     lifedisplay.cpp \
     main.cpp \
@@ -33,7 +32,6 @@ HEADERS += \
     block.h \
     coinsdisplay.h \
     game.h \
-    healthpotion.h \
     level.h \
     lifedisplay.h \
     player.h \
