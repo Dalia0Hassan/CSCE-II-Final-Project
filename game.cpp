@@ -27,7 +27,6 @@ Game::Game() {
 // Logic
 void Game::init() {
 
-
     // Initialize state and level
     state = new State();
 

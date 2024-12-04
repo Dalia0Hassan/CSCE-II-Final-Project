@@ -132,18 +132,18 @@ void Enemy::walkRight() {
 void Enemy::checkPlayer() {
 //    // Check if the player is in the range of the enemy 50 pixels to fight the player
     stopWalking();
-    if ( qAbs(x() - game->player->x()) <= fightRange) {
+    if ( qAbs(x() - game->player->xCenter()) <= fightRange) {
         fight();
         return;
     }
 
     // Check if the player is in the range of the enemy 400 pixels
     // If the player is in the range, start running towards the player
-    if (qAbs(x() - game->player->x()) <= walkRange) {
+    if (qAbs(x() - game->player->xCenter()) <= walkRange) {
         if (x() < game->player->x()){
             walkRight();
         }
-        else if ( x() > game->player->x()){
+        else if ( x() > game->player->xCenter()){
             walkLeft();
         }
     }
