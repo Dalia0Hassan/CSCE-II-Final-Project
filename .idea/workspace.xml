@@ -25,8 +25,7 @@
   <component name="ChangeListManager">
     <list default="true" id="533b5683-1d24-49b3-a018-6422c8e1bbee" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/enemy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/enemy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,11 +97,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="CMake Application.Game" />
       <item itemvalue="CMake Application.CSCE_II_Final_Project" />
@@ -130,6 +124,10 @@
       <workItem from="1732284462537" duration="4497000" />
       <workItem from="1732288967515" duration="2097000" />
       <workItem from="1733097671009" duration="1362000" />
+      <workItem from="1733164317985" duration="3418000" />
+      <workItem from="1733219259539" duration="756000" />
+      <workItem from="1733247153867" duration="853000" />
+      <workItem from="1733264186169" duration="2000" />
     </task>
     <servers />
   </component>

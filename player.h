@@ -81,7 +81,7 @@ public:
 
     // Setters
     void setDominantAction(PlayerActions action);
-
+    int xCenter(); // Center of the player on the x-axis
 private:
 
     // Logic
