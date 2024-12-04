@@ -127,8 +127,6 @@ void Game::startCurrentLevel() {
     // End flag position
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
 
-    // Initialize state
-
 }
 
 
