@@ -25,7 +25,9 @@ SOURCES += \
     state.cpp \
     trap.cpp \
     utils.cpp \
-    coin.cpp
+    coin.cpp \
+    enemy.cpp \
+    healthpotion.cpp
 
 HEADERS += \
     block.h \
@@ -43,7 +45,9 @@ HEADERS += \
     state.h \
     trap.h \
     utils.h \
-    coin.h
+    coin.h \
+    enemy.h \
+    healthpotion.h
 
 FORMS +=
 
