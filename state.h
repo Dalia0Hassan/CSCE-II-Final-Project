@@ -8,7 +8,7 @@ class State : public QObject
     Q_OBJECT
 private:
     int coins = 0;
-    int lives;
+    int lives = 5;
     int level = 1;
     bool isGameOver = false;
     bool isPaused = false;
@@ -30,7 +30,7 @@ public:
     void setIsPaused(bool isPaused);
     void incrementCoins();
     void decrementCoins();
-    void increamentLives();
+    void incrementLives();
     void decrementLives();
 
     // Signals

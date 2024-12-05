@@ -57,15 +57,6 @@ private:
     QTimer *walkTimer = nullptr;
     QTimer *collisionTimer = nullptr;
 
-    // Sounds
-    Sound * jumpSound;
-    Sound * walkSound;
-    Sound * dieSound;
-    Sound * destroySound;
-    Sound * shieldActiviationSound;
-    Sound * wooHooSound;
-    Sound * coinSound;
-
     // UI
     ShieldEffect * shield = nullptr;
 
@@ -118,7 +109,6 @@ private:
     void disableShield();
 
     // Helpers
-    void loadAudioFiles();
     void loadSpriteSheetImages();
     void changeDirection(PlayerDirections);
     void setCurrentSprite();

@@ -106,7 +106,8 @@ void Enemy::walkLeft() {
     stopWalking(); // Stop walking in the other direction
 
     // Only create a new timer if it doesn't exist
-    walkTimer = new QTimer(this);
+    if (walkTimer == nullptr)
+        walkTimer = new QTimer(this);
     connect(walkTimer, &QTimer::timeout, this, [=]() {
         if (x() - walkSpeed > 0)
             setX(x() - walkSpeed);

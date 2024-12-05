@@ -21,6 +21,7 @@ void State::setCoins(int coins) {
     emit stateChanged();
 }
 void State::setLives(int lives) {
+    qDebug() << "From set lives" << lives;
     if (lives < 0 || lives > 5)
         throw std::invalid_argument("Lives must be between 1 and 5");
     this->lives = lives;
@@ -33,12 +34,13 @@ void State::setLevel(int level) {
     this->level = level;
     emit stateChanged();
 }
+
 void State::setIsGameOver(bool isGameOver) { this->isGameOver = isGameOver; emit stateChanged(); }
 void State::setIsPaused(bool isPaused) { this->isPaused = isPaused; emit stateChanged(); }
 void State::incrementCoins() { setCoins(getCoins() + 1); emit stateChanged(); }
 void State::decrementCoins() { setCoins(getCoins() - 1); emit stateChanged(); }
 void State::decrementLives() { setLives(getLives() - 1); emit stateChanged(); }
-void State::increamentLives() { setLives(getLives() + 1); emit stateChanged(); }
+void State::incrementLives() { setLives(std::min(getLives() + 1, 5)); emit stateChanged(); }
 
 /* call update updateLives() and send the updated lives to it
 

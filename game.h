@@ -4,24 +4,20 @@
 #include <QGraphicsView>
 #include "coinsdisplay.h"
 #include "level.h"
+#include "lifedisplay.h"
 #include "player.h"
 #include <QMediaPlayer>
-#include "sound.h"
-#include "state.h"
+#include "State.h"
+#include "startingmenu.h"
 
 class Game : public QGraphicsView
 {
     Q_OBJECT
 private:
 
-    // Trackers
-    // Sounds
-    Sound *victorySound, *levelWinSound;
-    Sound *bgMusicPlayer;
-
-
     // UI
     QGraphicsPixmapItem *endFlag;
+    StartingMenu *startingMenu;
 
 public:
     // TODO: Make them private and modify that everywhere
@@ -29,6 +25,7 @@ public:
     State *state = nullptr;
     Level *level = nullptr;
     CoinsDisplay *coinsDisplayer; // TODO: Make it private
+    LifeDisplay *lifeDisplay = nullptr;
     QGraphicsProxyWidget *lifeDisplayer; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
@@ -53,6 +50,8 @@ private:
     void init();
     void startCurrentLevel();
     void handleNewLevel();
+    void toggleMenu();
+    void close();
 
     // Helpers
     void createMap();

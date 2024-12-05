@@ -2,6 +2,7 @@
 #define SPRITESHEET_H
 
 #include "qgraphicsitem.h"
+#include "qpainter.h"
 #include "utils.h"
 #include <QPixmap>
 #include <QString>

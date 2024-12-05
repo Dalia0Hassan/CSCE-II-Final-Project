@@ -1,6 +1,8 @@
 #include "game.h"
 #include "block.h"
 #include "lifedisplay.h"
+#include "qapplication.h"
+#include "soundplayer.h"
 #include "trap.h"
 #include "settingsmanager.h"
 #include <QGraphicsPixmapItem>
@@ -14,6 +16,7 @@
 #include <QGraphicsProxyWidget>
 #include "enemy.h"
 #include "healthpotion.h"
+#include <soundplayer.h>
 
 
 Game::Game() {
@@ -26,6 +29,20 @@ Game::Game() {
 
 // Logic
 void Game::init() {
+
+    // Initialize sound player
+    SP.init();
+
+    // Play starting menu sound
+    SP.startingMenuMusic->play();
+
+    // Initialize game starting menu
+    startingMenu = new StartingMenu();
+    startingMenu->show();
+
+    connect(startingMenu, &StartingMenu::startGameSignal, this, &Game::startCurrentLevel);
+    connect(startingMenu, &StartingMenu::exitGameSignal, this, &Game::close);
+
 
     // Initialize state and level
     state = new State();
@@ -45,13 +62,6 @@ void Game::init() {
     scene->addItem(player);
     connect(player, &Player::playerPositionChanged, this, &Game::handlePlayerMovement);
 
-    // Background music
-    bgMusicPlayer = new Sound(SM.settings->value("audio/bg/music").toString(), 0.125, QMediaPlayer::Loops::Infinite);
-
-    // Victory sound
-    victorySound = new Sound(SM.settings->value("audio/victorySound").toString());
-    levelWinSound = new Sound(SM.settings->value("audio/levelWinSound").toString());
-
     // End flag
     endFlag = new QGraphicsPixmapItem(QPixmap(SM.settings->value("scene/endFlag").toString()).scaled(75, 115));
     scene->addItem(endFlag);
@@ -65,11 +75,14 @@ void Game::init() {
     scene->addItem(coinsDisplayer);
 
     // Life displayer
-    lifeDisplayer = scene->addWidget(new LifeDisplay(state));
+    lifeDisplay = new LifeDisplay(state);
+    lifeDisplayer = scene->addWidget(lifeDisplay);
     lifeDisplayer->setPos(
         SM.settings->value("window/lifeDisplayerXOffset").toInt(),
         SM.settings->value("window/lifeDisplayerYOffset").toInt()
         );
+
+    emit state->stateChanged();
 
     // Connect state change signal
     connect(state, &State::stateChanged, this, &Game::handleStateChange);
@@ -83,6 +96,19 @@ void Game::startCurrentLevel() {
     if (level != nullptr)
         delete level;
 
+    this->setWindowTitle("RUN - Level " + QString::number(state->getLevel()));
+
+    if (startingMenu != nullptr)
+        startingMenu->close();
+
+    // Adjusting Sound
+    SP.startingMenuMusic->stop();
+    QTimer::singleShot(1000, [=](){
+        SP.bgMusic->play();
+    });
+
+    this->show();
+
     level = new Level(LEVELS[state->getLevel() - 1]);
 
     // Scene width, height, and background
@@ -93,6 +119,7 @@ void Game::startCurrentLevel() {
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
     player->startLevel();
+
 
     // Move with player
     // Disconnect from the playerPositionChanged signal and connect again
@@ -108,12 +135,10 @@ void Game::startCurrentLevel() {
     createMap();
 
     // Play Background Music
-    bgMusicPlayer->play();
+    SP.bgMusic->play();
 
     // End flag position
     endFlag->setPos(scene->width() - getEndOffset(), getGroundLevel() - endFlag->boundingRect().height());
-
-    // Initialize state
 
 }
 
@@ -128,14 +153,14 @@ void Game::handleNewLevel() {
     player->deactivate();
 
     // Stop the background music
-    bgMusicPlayer->stop();
+    SP.bgMusic->stop();
 
     // Play the win sound
-    levelWinSound->play();
+    SP.levelWinSound->play();
 
     // play "victory" sound after 500 ms
     QTimer::singleShot(1000, [=](){
-        victorySound->play();
+        SP.victorySound->play();
         if (state->getLevel() != LEVELS.size()) {
             state->setLevel(state->getLevel() + 1);
             startCurrentLevel();
@@ -143,6 +168,10 @@ void Game::handleNewLevel() {
             state->setIsGameOver(true);
     });
 
+}
+
+void Game::close() {
+    QApplication::quit();
 }
 
 // Slots
@@ -191,9 +220,9 @@ void Game::moveWithPlayer() {
 void Game::createMap() {
 
     // Enemy
-    // Enemy *enemy = new Enemy(600, this->getGroundLevel() - 125  , 2);
-    // elements.push_back(enemy);
-    // scene->addItem(enemy);
+    Enemy *enemy = new Enemy(600, this->getGroundLevel() - 125  , 2);
+    elements.push_back(enemy);
+    scene->addItem(enemy);
 
 
 
@@ -284,9 +313,12 @@ int Game::getSceneHeight() {
 Game::~Game() {
     delete scene;
     delete player;
-    delete bgMusicPlayer;
-    delete victorySound;
-    delete levelWinSound;
     delete state;
     delete endFlag;
+    delete coinsDisplayer;
+    delete lifeDisplayer;
+    delete startingMenu;
+    for (auto element : elements)
+        delete element;
+
 }

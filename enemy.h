@@ -13,8 +13,8 @@ class Enemy : public SpriteSheet
 {
 
     QVector<QPixmap> spriteSheetImages;
-    QTimer *walkTimer;
-    QTimer *checkPlayerTimer;
+    QTimer *walkTimer = nullptr;
+    QTimer *checkPlayerTimer = nullptr;
     int const walkSpeed = SM.settings->value("enemy/walkSpeed").toInt();
     int const walkRange = SM.settings->value("enemy/walkRange").toInt();
     int const fightRange = SM.settings->value("enemy/fightRange").toInt();
@@ -27,6 +27,8 @@ class Enemy : public SpriteSheet
 public:
     Enemy(qreal x , qreal y , qreal scale);
     ~Enemy();
+
+    int type() const override { return EnemyType; }
 
     void changeState(EnemyActions newState);
     void loadSpriteSheetImages();
