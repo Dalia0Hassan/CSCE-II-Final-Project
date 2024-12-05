@@ -16,17 +16,17 @@ class Game : public QGraphicsView
 private:
 
     // UI
-    QGraphicsPixmapItem *endFlag;
-    StartingMenu *startingMenu;
+    QGraphicsPixmapItem *endFlag = nullptr;
+    StartingMenu *startingMenu = nullptr;
 
 public:
     // TODO: Make them private and modify that everywhere
     QVector<QGraphicsPixmapItem*> elements;
     State *state = nullptr;
     Level *level = nullptr;
-    CoinsDisplay *coinsDisplayer; // TODO: Make it private
+    CoinsDisplay *coinsDisplayer = nullptr; // TODO: Make it private
     LifeDisplay *lifeDisplay = nullptr;
-    QGraphicsProxyWidget *lifeDisplayer; // TODO: Make it private
+    QGraphicsProxyWidget *lifeDisplayer = nullptr; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
 
