@@ -57,6 +57,7 @@ private:
     void createMap();
     void moveWithPlayer();
     void mapDisplayersToScene();
+    void addElement(QGraphicsPixmapItem *element);
 
 private slots:
     // Slots
