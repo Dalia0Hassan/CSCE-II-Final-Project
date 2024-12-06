@@ -155,8 +155,10 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/width", 48);
     settings->setValue("blocks/distanceFromGround",100);
     settings->setValue("blocks/collectionNumber", 10);
-    settings->setValue("blocks/collectionDistance", 150);
+    settings->setValue("blocks/collectionDistance", 50);
     settings->setValue("blocks/scale", 1);
+    settings->setValue("blocks/numberOfCollections", 25);
+    settings->setValue("levelEndOffset", 200);
 
 
     // Ratios
@@ -164,7 +166,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("ratios/healthPotion", 50);
     settings->setValue("pickUps/height", 100);
     settings->setValue("spikes/scale", 4);
-    settings->setValue("ratios/enemy", 20);
+    settings->setValue("ratios/enemy", 100);
 
     // Potions
     settings->setValue("potion/health/path", ":/Assets/images/Health.png");

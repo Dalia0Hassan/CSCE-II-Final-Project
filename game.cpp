@@ -240,9 +240,10 @@ void Game::createMap() {
     int enemyHeight = SM.settings->value("enemy/spriteFrameHeight").toInt();
     int spikeScale = SM.settings->value("spikes/scale").toInt();
     int enemyRatio = SM.settings->value("ratios/enemy").toInt();
+    int numberOfCollections = SM.settings->value("blocks/numberOfCollections").toInt();
 
 
-    for ( int i = 0 ; i < 5 ; i++){
+    for ( int i = 0 ; i < numberOfCollections ; i++){
         for ( int  j = 0 ; j < blockCollectionNumber ; j++ ){
             qreal X = (blockStartX + blockWidth*j) + (blockCollectionNumber*blockWidth + blockCollectionDistance)*(i) ;
             qreal Y = this->getGroundLevel() - blockDistanceFromGround;
@@ -259,7 +260,6 @@ void Game::createMap() {
                 auto *potion = new HealthPotion(X , Y - pickUpHeight , potionScale , healthPotionPath);
                 addElement(potion);
             }
-
 
             // Create Enemy Randomly
             int randomEnemy = RandomNumber(0, enemyRatio);
@@ -314,6 +314,14 @@ int Game::getSceneHeight() {
 }
 
 void Game::addElement(QGraphicsPixmapItem *element) {
+
+    int endOffset = SM.settings->value("levelEndOffset").toInt();
+
+    if ( element->x() > scene->width() -  endOffset || element->x() < 0 )
+    {
+        return;
+    }
+
     elements.push_back(element);
     scene->addItem(element);
 }
