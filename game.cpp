@@ -16,7 +16,7 @@
 #include <QGraphicsProxyWidget>
 #include "enemy.h"
 #include "healthpotion.h"
-#include <soundplayer.h>
+#include "soundplayer.h"
 
 
 Game::Game() {
