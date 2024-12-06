@@ -99,6 +99,14 @@ SettingsManager::SettingsManager() {
     settings->setValue("coin/spriteWidth", 180);
     settings->setValue("coin/spriteHeight", 20);
 
+    // Coin sprite properties
+    settings->setValue("coin/spriteFrameWidth", 20);
+    settings->setValue("coin/spriteFrameHeight", 20);
+    settings->setValue("coin/spriteContentOffsetX", 0);
+    settings->setValue("coin/spriteContentOffsetY", 0);
+    settings->setValue("coin/spriteContentWidth", 20);
+    settings->setValue("coin/spriteContentHeight", 20);
+
     settings->setValue("coin/volume", 0.2);
     settings->setValue("audio/coinPickUp/1", "qrc:/Assets/audio/capture_coin.wav");
     settings->setValue("audio/coinPickUp/2" , "qrc:/Assets/audio/coin_pickup.mp3");
