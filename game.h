@@ -59,6 +59,7 @@ private:
     void moveWithPlayer();
     void mapDisplayersToScene();
 
+
 private slots:
     // Slots
     void handlePlayerMovement();

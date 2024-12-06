@@ -14,19 +14,21 @@ private:
     int level = 1;
     bool isGameOver = false;
     bool isPaused = false;
+
 public:
     State();
 
     // Getters
     int getCoins();
-    int getLives();
     int getScore();
+    int getLives();
     int getLevel();
     bool getIsGameOver();
     bool getIsPaused();
 
     // Setters
     void setCoins(int coins);
+    //void setScore(int score);
     void setLives(int lives);
     void setLevel(int level);
     void setIsGameOver(bool isGameOver);
@@ -37,6 +39,8 @@ public:
     void decrementLives();
 
     // Signals
+
+
 signals:
     void stateChanged();
 };

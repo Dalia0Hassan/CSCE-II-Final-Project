@@ -84,7 +84,7 @@ void Game::init() {
     lifeDisplay = new LifeDisplay(state);
     lifeDisplayer = scene->addWidget(lifeDisplay);
 
-   // emit state->stateChanged();
+    // emit state->stateChanged();
 
     // Connect state change signal
     connect(state, &State::stateChanged, this, &Game::handleStateChange);
@@ -232,11 +232,14 @@ void Game::createMap() {
     // // Create coins
     QString path = SM.settings->value("coin/spriteSheet/1").toString();
 
+
+
     // // // Create pixmap
     for ( int i = 0 ; i < 40 ; i++){
         Coin *coin = new Coin(800+ i*200, this->getGroundLevel() -200 , 2 , 1 , path);
         elements.push_back(coin);
         scene->addItem(coin);
+
     }
 
 
