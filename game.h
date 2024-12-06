@@ -9,6 +9,7 @@
 #include <QMediaPlayer>
 #include "State.h"
 #include "startingmenu.h"
+#include<score.h>
 
 class Game : public QGraphicsView
 {
@@ -29,7 +30,7 @@ public:
     QGraphicsProxyWidget *lifeDisplayer = nullptr; // TODO: Make it private
     QGraphicsScene* scene = nullptr;
     Player * player = nullptr;
-
+    Score * score;
 
 public:
 
