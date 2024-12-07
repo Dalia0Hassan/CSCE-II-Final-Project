@@ -92,6 +92,8 @@ void Game::init() {
 
 void Game::startCurrentLevel() {
 
+
+
     // Initialize level
     if (level != nullptr)
         delete level;
@@ -130,6 +132,9 @@ void Game::startCurrentLevel() {
     // Set scroll policies to hide scrollbars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
+    clearMap();
 
     // Create obstacles
     createMap();
@@ -216,7 +221,23 @@ void Game::moveWithPlayer() {
 
 }
 
-// TODO: Position them according to ground level
+
+void Game::clearMap() {
+    for ( auto element : scene->items()){
+        for ( auto type : mapTypes){
+            if ( !element ){
+                continue;
+            }
+            if ( element->type() == type ){
+                scene->removeItem(element);
+            }
+        }
+    }
+    elements.clear();
+}
+
+
+
 void Game::createMap() {
 
     int blockStartX = SM.settings->value("blocks/startX").toInt();
