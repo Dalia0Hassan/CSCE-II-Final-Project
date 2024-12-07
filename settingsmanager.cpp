@@ -155,7 +155,7 @@ SettingsManager::SettingsManager() {
     settings->setValue("blocks/width", 48);
     settings->setValue("blocks/distanceFromGround",100);
     settings->setValue("blocks/collectionNumber", 10);
-    settings->setValue("blocks/collectionDistance", 50);
+    settings->setValue("blocks/collectionDistance", 150);
     settings->setValue("blocks/scale", 1);
     settings->setValue("blocks/numberOfCollections", 25);
     settings->setValue("levelEndOffset", 200);
