@@ -9,7 +9,7 @@
 #include <QMediaPlayer>
 #include "State.h"
 #include "startingmenu.h"
-#include<score.h>
+#include "score.h"
 
 class Game : public QGraphicsView
 {
